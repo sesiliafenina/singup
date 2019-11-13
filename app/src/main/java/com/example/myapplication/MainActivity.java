@@ -9,8 +9,6 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventslist);
 
+        // have to get lists of name and info of events here
         CustomListAdapter listAdapter = new CustomListAdapter(this, nameArray, infoArray);
 
         listView = findViewById(R.id.listviewID);
@@ -68,10 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-    }
-
-    public void goToEvent(android.view.View v){
 
     }
 }
