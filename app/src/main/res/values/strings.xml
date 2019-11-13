@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="feedbacktitle">Currency A</string>
+    <string name="currencyA">Value of currency A</string>
+    <string name="events">List Of Events</string>
+    <string name="eventname1">Eve</string>
+</resources>
