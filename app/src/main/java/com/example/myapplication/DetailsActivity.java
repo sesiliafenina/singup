@@ -10,14 +10,18 @@ import android.os.Bundle;
 
 public class DetailsActivity extends AppCompatActivity {
 
+    private String eventName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        String savedExtra = getIntent().getStringExtra("animal");
-        TextView myText = findViewById(R.id.eventDetails);
-        myText.setText(savedExtra);
+        eventName = getIntent().getStringExtra("eventName");
+        String eventInfo = getIntent().getStringExtra("eventInfo");
+        TextView getEventName = findViewById(R.id.eventName);
+        TextView getEventInfo = findViewById(R.id.eventDetails);
+        getEventName.setText(eventName);
+        getEventInfo.setText(eventInfo);
 
         Button button = findViewById(R.id.registerButton);
         button.setOnClickListener(new View.OnClickListener() {
@@ -28,8 +32,9 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void registerPerson(android.view.View v){
-        Log.d("CALLING", "register person is executed");
         Intent intent = new Intent(DetailsActivity.this, RegisterActivity.class);
-        startActivity(intent); // this is causing exception
+        String eventTitle = eventName;
+        intent.putExtra("eventName", eventTitle);
+        startActivity(intent);
     }
 }
