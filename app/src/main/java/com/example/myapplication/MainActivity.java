@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
                     "everything you need to know about coding your own modpack and integrating it with minecraft"
     };
 
-    Integer[] imageArray = {R.drawable.facebook, R.drawable.facebook, R.drawable.facebook, R.drawable.facebook, R.drawable.facebook,
-                        R.drawable.facebook, R.drawable.facebook};
+    Integer[] imageArray = {R.drawable.google, R.drawable.apple, R.drawable.facebook, R.drawable.menintech, R.drawable.resume,
+                        R.drawable.sutd, R.drawable.minecraft};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,8 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
                 String eventTitle = nameArray[position]; // creates the message. Later this will be event description
                 String eventInfo = infoArray[position];
+                Integer eventImage = imageArray[position];
                 intent.putExtra("eventName", eventTitle);
                 intent.putExtra("eventInfo", eventInfo);
+                intent.putExtra("eventPicture", eventImage);
                 startActivity(intent);
             }
         });

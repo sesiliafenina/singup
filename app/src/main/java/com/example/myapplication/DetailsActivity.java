@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.media.Image;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +20,13 @@ public class DetailsActivity extends AppCompatActivity {
 
         eventName = getIntent().getStringExtra("eventName");
         String eventInfo = getIntent().getStringExtra("eventInfo");
+        Integer eventImage = getIntent().getIntExtra("eventPicture", 0);
         TextView getEventName = findViewById(R.id.eventName);
         TextView getEventInfo = findViewById(R.id.eventDetails);
+        ImageView getEventImage = findViewById(R.id.event_image);
         getEventName.setText(eventName);
         getEventInfo.setText(eventInfo);
+        getEventImage.setImageResource(eventImage);
 
         Button button = findViewById(R.id.registerButton);
         button.setOnClickListener(new View.OnClickListener() {
