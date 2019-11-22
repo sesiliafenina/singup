@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/imageView1ID"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:layout_weight="1"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            app:srcCompat="@drawable/facebook"
-            android:layout_marginStart="10dp"/>
+            android:src="@drawable/steve"/>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
@@ -37,11 +36,11 @@
                 android:text="TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/infotextViewID"
+                android:id="@+id/eventTime"
                 android:maxLines="2"
                 android:ellipsize="end"
-                tools:textSize="32sp"
-                android:textColor="#ffe2e2e2"
+                tools:textSize="20sp"
+                android:textColor="#FFAAAAAA"
                 tools:fontFamily="sans-serif"/>
     </LinearLayout>
 </LinearLayout>

@@ -41,13 +41,16 @@ public class MainActivity extends AppCompatActivity {
 
     Integer[] imageArray = {R.drawable.google, R.drawable.apple, R.drawable.facebook, R.drawable.menintech, R.drawable.resume,
                         R.drawable.sutd, R.drawable.minecraft};
+
+    String[] eventTime = {"19:00-22:00", "17:00-18:45", "15:00-19:30", "09:30-15:00", "13:45-16:00", "18:00-20:45", "15:40-19:40"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventslist);
 
         // have to get lists of name and info of events here
-        CustomListAdapter listAdapter = new CustomListAdapter(this, nameArray, infoArray, imageArray);
+        CustomListAdapter listAdapter = new CustomListAdapter(this, nameArray, infoArray, imageArray, eventTime);
 
         listView = findViewById(R.id.listviewID);
         listView.setAdapter(listAdapter);

@@ -14,8 +14,8 @@ import com.google.zxing.common.BitMatrix;
 import java.util.BitSet;
 
 public class QRCodeActivity extends AppCompatActivity {
-    public final static int WHITE = 0xFFFFFFFF;
-    public final static int BLACK = 0xFF000000;
+    public final static int WHITE = 0xFF282828;
+    public final static int BLACK = 0xFFFFFFFF;
     public final static int WIDTH = 400;
     public final static int HEIGHT = 400;
     @Override
