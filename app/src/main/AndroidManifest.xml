@@ -9,11 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".DetailsActivity"></activity>
-        <activity android:name=".RegisterActivity"></activity>
-        <activity android:name=".QRCodeActivity"></activity>
+        <activity android:name=".ManagerActivity"></activity>
+        <activity android:name=".MainActivity" />
+        <activity android:name=".DetailsActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".QRCodeActivity" />
         <activity android:name=".MainPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
