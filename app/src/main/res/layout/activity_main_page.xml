@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#FF282828"
+        tools:context=".MainPage">
+    <ImageView
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/main_screen"/>
+    <Button
+            android:id="@+id/buttonRegister"
+            android:layout_height="wrap_content"
+            android:textColor="#ff000000"
+            android:background="@drawable/rounded_button_blue"
+            android:layout_width="200dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center"
+            android:text="Register"/>
+    <Button
+            android:id="@+id/buttonManager"
+            android:layout_height="wrap_content"
+            android:textColor="#ff000000"
+            android:background="@drawable/rounded_button_purple"
+            android:layout_width="200dp"
+            android:layout_gravity="center"
+            android:text="Attendance"/>
+
+
+
+
+</LinearLayout>

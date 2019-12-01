@@ -21,12 +21,12 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView listView;
+    private ListView listView;
 
-    String[] nameArray = {"Google Recruitment Talk", "Apple Recruitment Talk", "Facebook Coding Workshop", "Men in Technology",
+    private String[] nameArray = {"Google Recruitment Talk", "Apple Recruitment Talk", "Facebook Coding Workshop", "Men in Technology",
     "How to Fix Your Resume?", "A Better World By Design", "Minecraft Workshop"};
 
-    String[] infoArray = {"Google is recruiting and YOU can be one of it!! Register now, slots are limited!",
+    private String[] infoArray = {"Google is recruiting and YOU can be one of it!! Register now, slots are limited!",
             "Apple is recruiting and YOU can be one of it!! Register now, slots are limited!",
             "Wanna learn how to code better? Attend a coding workshop hosted by Facebook in their headquarters and" +
                     "use this opportunity to learn what it is like to work in facebook!",
@@ -39,10 +39,10 @@ public class MainActivity extends AppCompatActivity {
                     "everything you need to know about coding your own modpack and integrating it with minecraft"
     };
 
-    Integer[] imageArray = {R.drawable.google, R.drawable.apple, R.drawable.facebook, R.drawable.menintech, R.drawable.resume,
+    private Integer[] imageArray = {R.drawable.google, R.drawable.apple, R.drawable.facebook, R.drawable.menintech, R.drawable.resume,
                         R.drawable.sutd, R.drawable.minecraft};
 
-    String[] eventTime = {"19:00-22:00", "17:00-18:45", "15:00-19:30", "09:30-15:00", "13:45-16:00", "18:00-20:45", "15:40-19:40"};
+    private String[] eventTime = {"19:00-22:00", "17:00-18:45", "15:00-19:30", "09:30-15:00", "13:45-16:00", "18:00-20:45", "15:40-19:40"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
