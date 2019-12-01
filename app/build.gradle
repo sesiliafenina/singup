@@ -28,6 +28,6 @@ android {
         androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
         implementation "com.google.zxing:core:3.3.3"
         implementation 'com.google.zxing:javase:3.3.0'
-        // implementation 'me.dm7.barcodescanner:zxing:1.9.13'
+        //implementation 'me.dm7.barcodescanner:zxing:1.9.13'
         implementation 'de.hdodenhof:circleimageview:3.0.1'
     }
