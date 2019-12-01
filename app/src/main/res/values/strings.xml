@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">SignUp!</string>
     <string name="feedbacktitle">Currency A</string>
     <string name="currencyA">Value of currency A</string>
     <string name="events">List Of Events</string>
