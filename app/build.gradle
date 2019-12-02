@@ -30,4 +30,6 @@ android {
         implementation 'com.google.zxing:javase:3.3.0'
         //implementation 'me.dm7.barcodescanner:zxing:1.9.13'
         implementation 'de.hdodenhof:circleimageview:3.0.1'
+        implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
     }
