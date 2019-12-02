@@ -7,11 +7,14 @@ package com.example.myapplication;
 // ***Sep 2019
 
 import android.content.Intent;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.os.Bundle;
 import java.util.ArrayList;
 
@@ -49,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventslist);
 
+        final SwipeRefreshLayout swipeRefreshLayout;
+
         // have to get lists of name and info of events here
         CustomListAdapter listAdapter = new CustomListAdapter(this, nameArray, infoArray, imageArray, eventTime);
 
@@ -67,6 +72,22 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("eventInfo", eventInfo);
                 intent.putExtra("eventPicture", eventImage);
                 startActivity(intent);
+            }
+        });
+
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.Swipe);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                //TODO http request here
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                },4000);
             }
         });
 

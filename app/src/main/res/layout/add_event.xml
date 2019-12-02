@@ -1,25 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
+              android:layout_marginLeft="10dp"
+              android:layout_marginRight="10dp"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_weight="4"
+              android:layout_height="match_parent"
+              android:layout_marginStart="10dp">
     <LinearLayout
             android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-    <Button
-            android:id="@+id/addImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"/>
+        <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            <Button
+                    android:id="@+id/addImage"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"/>
+            <ImageView
+                    android:layout_width="100dp"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/registerEventImage"
+                    android:scaleType="centerCrop"
+                    android:background="@android:color/darker_gray"
+                    android:layout_height="100dp"/>
+        </RelativeLayout>
     <EditText
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:layout_gravity="center"
             android:id="@+id/eventTitle"
+            android:textSize="20sp"
+            android:hint="Event Title"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"/>
     </LinearLayout>
+    <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Time        :"/>
+    <EditText
+            android:id="@+id/eventTime"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Location :"/>
+        <EditText
+                android:id="@+id/eventLocation"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+    <TextView
+            android:layout_weight="15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Event Details     :"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:layout_weight="1"
+                android:id="@+id/textCounter"/>
+    </LinearLayout>
+    <EditText
+            android:id="@+id/eventDescription"
+            android:layout_width="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:lines="8"
+            android:minLines="6"
+            android:gravity="top|start"
+            android:maxLines="10"
+            android:layout_marginEnd="10dp"/>
+    <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Guest List           :"/>
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+        <Button
+                android:id="@+id/addGuest"
+                android:layout_width="80dp"
+                android:layout_height="80dp"/>
+    </RelativeLayout>
+
 </LinearLayout>

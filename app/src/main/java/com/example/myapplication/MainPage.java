@@ -27,13 +27,12 @@ public class MainPage extends AppCompatActivity {
                 openMainActivity();   //open's Nina's event page
             }
         });
-
-        /*buttonManager.setOnClickListener(new View.OnClickListener() {
+        buttonManager.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openManagerActivity();
             }
-        });*/
+        });
 
     }
 
@@ -41,11 +40,11 @@ public class MainPage extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-    /*
+
     public void openManagerActivity(){
         Intent intent = new Intent(this, ManagerActivity.class);
         startActivity(intent);
-    }*/
+    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -35,7 +36,8 @@ public class RegisterActivity extends AppCompatActivity {
         Button button = findViewById(R.id.registerButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new AsyncHttpRequest().execute();
+                Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -51,7 +53,6 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         try{
-
                             String userID = response.getString("userId");
                             String title = response.getString("title");
                             /*TextView getUserId = findViewById(R.id.userId);
