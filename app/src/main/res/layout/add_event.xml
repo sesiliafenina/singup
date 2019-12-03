@@ -116,6 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <RelativeLayout
+                    android:layout_marginRight="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 <Button
@@ -125,6 +126,56 @@
                         android:layout_height="80dp"/>
                 <ImageView
                         android:id="@+id/guestImage"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="centerCrop"
+                        android:layout_centerInParent="true"
+                        android:background="@android:color/darker_gray"/>
+            </RelativeLayout>
+            <RelativeLayout
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <Button
+                        android:id="@+id/addGuest2"
+                        android:background="@android:color/transparent"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"/>
+                <ImageView
+                        android:id="@+id/guestImage2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="centerCrop"
+                        android:layout_centerInParent="true"
+                        android:background="@android:color/darker_gray"/>
+            </RelativeLayout>
+            <RelativeLayout
+                    android:layout_marginRight="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <Button
+                        android:id="@+id/addGuest3"
+                        android:background="@android:color/transparent"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"/>
+                <ImageView
+                        android:id="@+id/guestImage3"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="centerCrop"
+                        android:layout_centerInParent="true"
+                        android:background="@android:color/darker_gray"/>
+            </RelativeLayout>
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <Button
+                        android:id="@+id/addGuest4"
+                        android:background="@android:color/transparent"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"/>
+                <ImageView
+                        android:id="@+id/guestImage4"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:scaleType="centerCrop"

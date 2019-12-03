@@ -18,7 +18,10 @@ import java.io.IOException;
 
 public class AddEventActivity extends AppCompatActivity {
     private int EVENT_IMAGE_REQUEST_CODE = 1;
-    private int GUEST_IMAGE_REQUEST_CODE = 2;
+    private int GUEST_IMAGE_REQUEST_CODE_1 = 2;
+    private int GUEST_IMAGE_REQUEST_CODE_2 = 3;
+    private int GUEST_IMAGE_REQUEST_CODE_3 = 4;
+    private int GUEST_IMAGE_REQUEST_CODE_4 = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,31 @@ public class AddEventActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickGuestImage();
+                pickGuestImage(R.id.guestImage);
+            }
+        });
+
+        Button button3 = findViewById(R.id.addGuest2);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickGuestImage(R.id.guestImage2);
+            }
+        });
+
+        Button button4 = findViewById(R.id.addGuest3);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickGuestImage(R.id.guestImage3);
+            }
+        });
+
+        Button button5 = findViewById(R.id.addGuest4);
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickGuestImage(R.id.guestImage4);
             }
         });
 
@@ -76,7 +103,7 @@ public class AddEventActivity extends AppCompatActivity {
             }
         }
 
-        else if (requestCode == GUEST_IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
 
@@ -90,6 +117,7 @@ public class AddEventActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            /*
             // TODO: add another button right beside the previous button
             LinearLayout linearLayout = findViewById(R.id.guestListAdd);
             RelativeLayout relativeLayout = new RelativeLayout(this);
@@ -122,7 +150,22 @@ public class AddEventActivity extends AppCompatActivity {
             // Layout, params);
             //linearLayout.addView(btn);
             linearLayout.addView(imageView);
+*/
+        }
+        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+
+                ImageView imageView = findViewById(R.id.guestImage2);
+                imageView.setImageBitmap(bitmap);
+                // TODO : also add the bitmap to a list of images to send to the server
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -138,7 +181,7 @@ public class AddEventActivity extends AppCompatActivity {
         startActivityForResult(intent,EVENT_IMAGE_REQUEST_CODE);
     }
 
-    private void pickGuestImage(){
+    private void pickGuestImage(int id){
         //Create an Intent with action as ACTION_PICK
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         // Sets the type as image/*. This ensures only components of type image are selected
@@ -147,7 +190,18 @@ public class AddEventActivity extends AppCompatActivity {
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
         // Launching the Intent
-        startActivityForResult(intent,GUEST_IMAGE_REQUEST_CODE);
+        if (R.id.guestImage == id) {
+            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_1);
+        }
+        else if (R.id.guestImage2 == id) {
+            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_2);
+        }
+        else if (R.id.guestImage3 == id) {
+            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_3);
+        }
+        else if (R.id.guestImage4 == id) {
+            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_4);
+        }
     }
 
 }
