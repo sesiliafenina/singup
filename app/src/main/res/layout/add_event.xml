@@ -105,13 +105,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Guest List           :"/>
-    <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-        <Button
-                android:id="@+id/addGuest"
-                android:layout_width="80dp"
-                android:layout_height="80dp"/>
-    </RelativeLayout>
-
+    <HorizontalScrollView
+            android:layout_marginRight="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp">
+        <LinearLayout
+                android:id="@+id/guestListAdd"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <Button
+                        android:id="@+id/addGuest"
+                        android:background="@android:color/transparent"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"/>
+                <ImageView
+                        android:id="@+id/guestImage"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:scaleType="centerCrop"
+                        android:layout_centerInParent="true"
+                        android:background="@android:color/darker_gray"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
+    <Button
+            android:layout_marginTop="20dp"
+            android:id="@+id/addEvent"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Add Event"
+            android:background="@drawable/rounded_button"
+            android:layout_gravity="center"/>
 </LinearLayout>

@@ -2,16 +2,16 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.ViewGroup;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -31,6 +31,13 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pickEventImage();
+            }
+        });
+        Button button2 = findViewById(R.id.addGuest);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickGuestImage();
             }
         });
 
@@ -77,12 +84,45 @@ public class AddEventActivity extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 // Log.d(TAG, String.valueOf(bitmap));
 
-                ImageView imageView = findViewById(R.id.registerEventImage);
+                ImageView imageView = findViewById(R.id.guestImage);
                 imageView.setImageBitmap(bitmap);
                 // TODO : also add the bitmap to a list of images to send to the server
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            // TODO: add another button right beside the previous button
+            LinearLayout linearLayout = findViewById(R.id.guestListAdd);
+            RelativeLayout relativeLayout = new RelativeLayout(this);
+
+            RelativeLayout.LayoutParams params =  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+            Button btn = new Button(this);
+            btn.setId(R.id.addGuest);
+            //btn.setLayoutParams(params);
+            btn.setBackgroundColor(Color.BLACK);
+            btn.setWidth(210);
+            btn.setHeight(210);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    pickGuestImage();
+                }
+            });
+
+            ImageView imageView = new ImageView(this);
+            imageView.setMaxWidth(210);
+            imageView.setMaxHeight(210);
+            //imageView.setScaleType();
+            imageView.setId(R.id.guestImage);
+            imageView.setBackgroundColor(Color.DKGRAY);
+
+            //relativeLayout.addView(btn);
+            //relativeLayout.addView(imageView);
+            //linearLayout.addView(relative
+            // Layout, params);
+            //linearLayout.addView(btn);
+            linearLayout.addView(imageView);
+
         }
     }
 
