@@ -3,18 +3,29 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.icu.text.UnicodeSetSpanner;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.loopj.android.http.*;
+import cz.msebera.android.httpclient.Header;
 
 public class AddEventActivity extends AppCompatActivity {
     private int EVENT_IMAGE_REQUEST_CODE = 1;
@@ -22,6 +33,8 @@ public class AddEventActivity extends AppCompatActivity {
     private int GUEST_IMAGE_REQUEST_CODE_2 = 3;
     private int GUEST_IMAGE_REQUEST_CODE_3 = 4;
     private int GUEST_IMAGE_REQUEST_CODE_4 = 5;
+    private List<Bitmap> listOfGGuest = new ArrayList<>();
+    private Bitmap eventImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +81,14 @@ public class AddEventActivity extends AppCompatActivity {
             }
         });
 
+        Button register = findViewById(R.id.addEvent);
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendEventForm2();
+            }
+        });
+
         final TextWatcher mTextEditorWatcher = new TextWatcher() {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -98,6 +119,8 @@ public class AddEventActivity extends AppCompatActivity {
                 ImageView imageView = findViewById(R.id.registerEventImage);
                 imageView.setImageBitmap(bitmap);
                 // TODO : also add the bitmap to a list of images to send to the server
+                eventImage = bitmap;
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -114,43 +137,10 @@ public class AddEventActivity extends AppCompatActivity {
                 ImageView imageView = findViewById(R.id.guestImage);
                 imageView.setImageBitmap(bitmap);
                 // TODO : also add the bitmap to a list of images to send to the server
+                listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            /*
-            // TODO: add another button right beside the previous button
-            LinearLayout linearLayout = findViewById(R.id.guestListAdd);
-            RelativeLayout relativeLayout = new RelativeLayout(this);
-
-            RelativeLayout.LayoutParams params =  new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-            Button btn = new Button(this);
-            btn.setId(R.id.addGuest);
-            //btn.setLayoutParams(params);
-            btn.setBackgroundColor(Color.BLACK);
-            btn.setWidth(210);
-            btn.setHeight(210);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pickGuestImage();
-                }
-            });
-
-            ImageView imageView = new ImageView(this);
-            imageView.setMaxWidth(210);
-            imageView.setMaxHeight(210);
-            //imageView.setScaleType();
-            imageView.setId(R.id.guestImage);
-            imageView.setBackgroundColor(Color.DKGRAY);
-
-            //relativeLayout.addView(btn);
-            //relativeLayout.addView(imageView);
-            //linearLayout.addView(relative
-            // Layout, params);
-            //linearLayout.addView(btn);
-            linearLayout.addView(imageView);
-*/
         }
         else if (requestCode == GUEST_IMAGE_REQUEST_CODE_2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
@@ -163,6 +153,39 @@ public class AddEventActivity extends AppCompatActivity {
                 ImageView imageView = findViewById(R.id.guestImage2);
                 imageView.setImageBitmap(bitmap);
                 // TODO : also add the bitmap to a list of images to send to the server
+                listOfGGuest.add(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_3 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+
+                ImageView imageView = findViewById(R.id.guestImage3);
+                imageView.setImageBitmap(bitmap);
+                // TODO : also add the bitmap to a list of images to send to the server
+                listOfGGuest.add(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_4 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            Uri uri = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                // Log.d(TAG, String.valueOf(bitmap));
+
+                ImageView imageView = findViewById(R.id.guestImage4);
+                imageView.setImageBitmap(bitmap);
+                // TODO : also add the bitmap to a list of images to send to the server
+                listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -204,4 +227,83 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
+    private void sendAddEventForm()
+
+    {
+        String charset = "UTF-8";
+        String requestURL = "http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/";
+        File uploadFile1 = new File("C:\\Users\\Sesilia Fenina G\\Desktop\\Screenshot_1575301493.png");
+        File uploadFile2 = new File("C:\\Users\\Sesilia Fenina G\\Desktop\\Screenshot_1575301493.png");
+
+        try {
+            MultipartUtility multipart = new MultipartUtility(requestURL, charset);
+            multipart.addHeaderField("User-Agent", "CodeJava");
+            multipart.addHeaderField("Test-Header", "Header-Value");
+
+            multipart.addFormField("description", "Cool Pictures");
+            multipart.addFormField("keywords", "Java,upload,Spring");
+
+            multipart.addFilePart("fileUpload", uploadFile1);
+            multipart.addFilePart("fileUpload", uploadFile2);
+
+            List<String> response = multipart.finish();
+
+            System.out.println("SERVER REPLIED:");
+
+            for (String line : response) {
+                System.out.println(line);
+            }
+        }
+        catch (IOException ex){
+            System.err.println(ex);
+            Log.d(" HTTP MULTI PART FORM FAILURE", ex.toString());
+        }
+    }
+
+    private void sendEventForm2(){
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams parameters = new RequestParams();
+        parameters.put("title", "value");
+        parameters.put("description", "lorem ipsum sit doloret");
+        parameters.put("location", "SUTD");
+        parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(listOfGGuest.get(0))));
+        parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(eventImage)));
+        parameters.put("start", "2019-12-12 12:00:00");
+        parameters.put("end", "2019-12-12 16:00:00");
+
+        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                CharSequence c = "Http successful";
+                Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+                // called when response HTTP status is "200 OK"
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                CharSequence c = "Http failed";
+                Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+
+            }
+        });
+    }
+
+    private byte[] bitmapToByteArray(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
 }

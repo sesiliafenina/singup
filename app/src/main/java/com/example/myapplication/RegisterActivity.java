@@ -20,10 +20,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
-    public final static int WHITE = 0xFFFFFFFF;
-    public final static int BLACK = 0xFF000000;
-    public final static int WIDTH = 400;
-    public final static int HEIGHT = 400;
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -37,12 +33,13 @@ public class RegisterActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
+                sendRegistrationFormJSON();
                 startActivity(intent);
             }
         });
     }
 
-    private void sendRegistrationFormJSON(android.view.View v){
+    private void sendRegistrationFormJSON(){
 
         String url = "https://jsonplaceholder.typicode.com/todos/1";
 
@@ -77,48 +74,5 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Access the RequestQueue through your singleton class.
         Queue.getInstance(this).addToRequestQueue(jsonObjectRequest);
-
-        //Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
-        //startActivity(intent);
-    }
-}
-
-class AsyncHttpRequest extends AsyncTask<Void, Void, Void>{
-
-    @Override
-    protected Void doInBackground(Void... voids) {
-        // this will later be changed according to the form values
-        File uploadFile1 = new File("e:/Test/PIC1.JPG");
-        File uploadFile2 = new File("e:/Test/PIC2.JPG");
-
-        // need to change URL
-        String requestURL = "http://localhost:8080/FileUploadSpringMVC/uploadFile.do";
-
-        try {
-            MultipartUtility multipart = new MultipartUtility(requestURL, "UTF-8");
-
-            // this will later be changed according to the form values
-            multipart.addHeaderField("User-Agent", "CodeJava");
-            multipart.addHeaderField("Test-Header", "Header-Value");
-
-            multipart.addFormField("description", "Cool Pictures");
-            multipart.addFormField("keywords", "Java,upload,Spring");
-
-            multipart.addFilePart("fileUpload", uploadFile1);
-            multipart.addFilePart("fileUpload", uploadFile2);
-
-            List<String> response = multipart.finish();
-
-            System.out.println("SERVER REPLIED:");
-
-            for (String line : response) {
-                System.out.println(line);
-            }
-            //return response;
-
-        } catch (IOException ex) {
-            System.err.println(ex);
-        }
-        return null; // code should never reach here
     }
 }
