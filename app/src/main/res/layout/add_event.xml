@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
-              android:layout_marginLeft="10dp"
-              android:layout_marginRight="10dp"
               android:layout_width="match_parent"
               android:layout_weight="4"
-              android:layout_height="match_parent"
-              android:layout_marginStart="10dp">
+              android:background="#FF282828"
+              android:layout_height="match_parent">
     <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_marginTop="10dp"
             android:layout_height="wrap_content"
@@ -26,10 +27,13 @@
                     android:layout_centerInParent="true"
                     android:id="@+id/registerEventImage"
                     android:scaleType="centerCrop"
-                    android:background="@android:color/darker_gray"
+                    android:src="@drawable/add_image"
                     android:layout_height="100dp"/>
         </RelativeLayout>
     <EditText
+            android:backgroundTint="#ffe2e2e2"
+            android:textColor="#ffe2e2e2"
+            android:textColorHint="@android:color/darker_gray"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_gravity="center"
@@ -41,14 +45,23 @@
             android:layout_marginStart="10dp"/>
     </LinearLayout>
     <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
     <TextView
+            android:textSize="20sp"
+            android:textColor="#ffe2e2e2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Event Time        :"/>
     <EditText
+            android:textSize="20sp"
+            android:backgroundTint="#ffe2e2e2"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="#ffe2e2e2"
             android:id="@+id/eventTime"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
@@ -56,32 +69,46 @@
 
     </LinearLayout>
     <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         <TextView
+                android:textSize="20sp"
+                android:textColor="#ffe2e2e2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Event Location :"/>
         <EditText
+                android:textSize="20sp"
+                android:backgroundTint="#ffe2e2e2"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="#ffe2e2e2"
                 android:id="@+id/eventLocation"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginStart="10dp"/>
     </LinearLayout>
     <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
     <TextView
+            android:textSize="20sp"
+            android:textColor="#ffe2e2e2"
             android:layout_weight="15"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="Event Details     :"/>
         <TextView
+                android:textColor="#ffe2e2e2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
@@ -89,6 +116,12 @@
                 android:id="@+id/textCounter"/>
     </LinearLayout>
     <EditText
+            android:textSize="20sp"
+            android:backgroundTint="#ffe2e2e2"
+            android:textColorHint="@android:color/darker_gray"
+            android:textColor="#ffe2e2e2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:id="@+id/eventDescription"
             android:layout_width="match_parent"
             android:layout_marginRight="10dp"
@@ -101,11 +134,19 @@
             android:maxLines="10"
             android:layout_marginEnd="10dp"/>
     <TextView
-            android:layout_marginTop="5dp"
+            android:textSize="20sp"
+            android:textColor="#ffe2e2e2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Guest List           :"/>
     <HorizontalScrollView
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

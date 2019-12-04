@@ -131,8 +131,15 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/norman"/>
-
         </LinearLayout>
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Event Details :"
+                android:textColor="#ffe2e2e2"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:layout_marginStart="10dp"/>
         <TextView
                 android:text="Event details here"
                 android:textColor="#ffe2e2e2"
@@ -140,7 +147,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/eventDetails"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"/>
