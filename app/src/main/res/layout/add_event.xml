@@ -5,6 +5,13 @@
               android:layout_weight="4"
               android:background="#FF282828"
               android:layout_height="match_parent">
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
     <LinearLayout
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
@@ -51,21 +58,72 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+        <TextView
+                android:textSize="20sp"
+                android:textColor="#ffe2e2e2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Date            :"/>
+        <EditText
+                android:textSize="20sp"
+                android:backgroundTint="#ffe2e2e2"
+                android:textColorHint="@android:color/darker_gray"
+                android:hint="YYYY-MM-DD"
+                android:textColor="#ffe2e2e2"
+                android:id="@+id/eventDate"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
     <TextView
             android:textSize="20sp"
             android:textColor="#ffe2e2e2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Event Time        :"/>
+            android:text="Event Time Start :"/>
     <EditText
             android:textSize="20sp"
             android:backgroundTint="#ffe2e2e2"
             android:textColorHint="@android:color/darker_gray"
             android:textColor="#ffe2e2e2"
-            android:id="@+id/eventTime"
+            android:id="@+id/eventStartTime"
+            android:hint="HH:MM"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
+    <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <TextView
+                android:textSize="20sp"
+                android:textColor="#ffe2e2e2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Time End   :"/>
+        <EditText
+                android:textSize="20sp"
+                android:backgroundTint="#ffe2e2e2"
+                android:textColorHint="@android:color/darker_gray"
+                android:textColor="#ffe2e2e2"
+                android:id="@+id/eventEndTime"
+                android:hint="HH:MM"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"/>
 
     </LinearLayout>
     <LinearLayout
@@ -80,7 +138,7 @@
                 android:textColor="#ffe2e2e2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Event Location :"/>
+                android:text="Event Location    :"/>
         <EditText
                 android:textSize="20sp"
                 android:backgroundTint="#ffe2e2e2"
@@ -106,7 +164,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Event Details     :"/>
+            android:text="Event Details        :"/>
         <TextView
                 android:textColor="#ffe2e2e2"
                 android:layout_width="wrap_content"
@@ -143,7 +201,7 @@
             android:layout_marginBottom="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Guest List           :"/>
+            android:text="Guest List             :"/>
     <HorizontalScrollView
             android:layout_marginLeft="10dp"
             android:layout_marginStart="10dp"
@@ -227,10 +285,13 @@
     </HorizontalScrollView>
     <Button
             android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             android:id="@+id/addEvent"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:text="Add Event"
             android:background="@drawable/rounded_button"
             android:layout_gravity="center"/>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

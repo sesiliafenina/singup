@@ -33,6 +33,14 @@ public class AddEventActivity extends AppCompatActivity {
     private int GUEST_IMAGE_REQUEST_CODE_2 = 3;
     private int GUEST_IMAGE_REQUEST_CODE_3 = 4;
     private int GUEST_IMAGE_REQUEST_CODE_4 = 5;
+
+    // List of params to create events
+    private String title;
+    private String description;
+    private String location;
+    private String start;
+    private String end;
+    private String date;
     private List<Bitmap> listOfGGuest = new ArrayList<>();
     private Bitmap eventImage;
 
@@ -262,14 +270,17 @@ public class AddEventActivity extends AppCompatActivity {
 
     private void sendEventForm2(){
         AsyncHttpClient client = new AsyncHttpClient();
+        getAllParams();
         RequestParams parameters = new RequestParams();
-        parameters.put("title", "value");
-        parameters.put("description", "lorem ipsum sit doloret");
-        parameters.put("location", "SUTD");
-        parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(listOfGGuest.get(0))));
+        parameters.put("title", title);
+        parameters.put("description", description);
+        parameters.put("location", location);
+        for (Bitmap butt : listOfGGuest){
+            parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
+        }
         parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(eventImage)));
-        parameters.put("start", "2019-12-12 12:00:00");
-        parameters.put("end", "2019-12-12 16:00:00");
+        parameters.put("start", start);
+        parameters.put("end", end);
 
         client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
 
@@ -305,5 +316,27 @@ public class AddEventActivity extends AppCompatActivity {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+    private void getAllParams(){
+        EditText eventTitle = findViewById(R.id.eventTitle);
+        title = eventTitle.getText().toString();
+
+        EditText eventDescription = findViewById(R.id.eventDescription);
+        description = eventDescription.getText().toString();
+
+        EditText eventLocation = findViewById(R.id.eventLocation);
+        location = eventLocation.getText().toString();
+
+        EditText dateD = findViewById(R.id.eventDate);
+        date = dateD.getText().toString();
+
+        EditText startTime = findViewById(R.id.eventStartTime);
+        String startT = startTime.getText().toString();
+        start = date + " " + startT;
+
+        EditText endTime = findViewById(R.id.eventEndTime);
+        String endT = endTime.getText().toString();
+        end = date + " " + endT;
     }
 }
