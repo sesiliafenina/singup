@@ -50,6 +50,16 @@ public class AddEventActivity extends AppCompatActivity {
         setContentView(R.layout.add_event);
         final TextView mTextView = findViewById(R.id.textCounter);
         final EditText mEditText = findViewById(R.id.eventDescription);
+
+        Button toEventPageButton = findViewById(R.id.toEventPageButton);
+        toEventPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMainActivity(); //to Nina's events page
+
+            }
+        });
+
         Button button = findViewById(R.id.addImage);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,5 +347,10 @@ public class AddEventActivity extends AppCompatActivity {
         EditText endTime = findViewById(R.id.eventEndTime);
         String endT = endTime.getText().toString();
         end = date + " " + endT;
+    }
+
+    public void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }
