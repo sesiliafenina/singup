@@ -67,15 +67,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="horizontal">
     <Button
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_button"
+        android:background="@drawable/rounded_button_blue"
         android:textColor="#ff000000"
         android:id="@+id/selfieButton"
         android:text="Upload Selfie"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="5dp"
         android:layout_marginBottom="20dp"/>
 
     <Button
@@ -83,6 +84,7 @@
             android:layout_height="wrap_content"
             android:textColor="#ff000000"
             android:background="@drawable/rounded_button"
+            android:layout_marginStart="5dp"
             android:layout_width="150dp"
             android:text="Submit"
             android:layout_marginTop="20dp"

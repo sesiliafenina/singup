@@ -4,16 +4,15 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,16 +21,19 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.loopj.android.http.*;
+import cz.msebera.android.httpclient.Header;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
+    private Bitmap qrCode;
     Button mCaptureBtn;
     Uri image_uri;
 
@@ -71,48 +73,64 @@ public class RegisterActivity extends AppCompatActivity {
         Button button = findViewById(R.id.registerButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
-                sendRegistrationFormJSON();
-                startActivity(intent);
+                sendRegistrationForm();
             }
         });
     }
 
-    private void sendRegistrationFormJSON(){
+    private void sendRegistrationForm() {
 
-        String url = "https://jsonplaceholder.typicode.com/todos/1";
+        String url = "http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/QR";
+        EditText emailtext = findViewById(R.id.email);
+        EditText nameText = findViewById(R.id.name);
+        String email = emailtext.getText().toString();
+        String name = nameText.getText().toString();
+        RequestParams params = new RequestParams();
+        params.put("email", email);
+        params.put("name", name);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post(url, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                CharSequence c = "Registered";
+                Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+                try {
+                    String qrLink = response.getString("response");
+                    downloadQrCode(qrLink);
+                    File file = new File(getCacheDir(), "qrCode");
+                    FileOutputStream fOut = new FileOutputStream(file);
+                    qrCode.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                    fOut.close();
+                    // download image here
+                } catch (JSONException | IOException e) {
+                    e.printStackTrace();
+                }
+                //move to a different intent here
+                Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
+                startActivity(intent);
+            }
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try{
-                            String userID = response.getString("userId");
-                            String title = response.getString("title");
-                            /*TextView getUserId = findViewById(R.id.userId);
-                            TextView getTitle = findViewById(R.id.title);
-                            getUserId.setText(response.toString());
-                            getTitle.setText(userID + title);*/
-
-                            Toast.makeText(getApplicationContext(), response.toString(), Toast.LENGTH_LONG).show();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse) {
+                if (statusCode == 400){
+                    try {
+                        String error = errorResponse.getJSONObject(1).getString("error");
+                        if (error.equals("waitlist")){
+                            // TODO: change the intent
+                            Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
+                            startActivity(intent);
                         }
-                        catch (JSONException e) {
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        else if (error.equals("full")){
+                            // TODO: change the intent
+                            Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
+                            startActivity(intent);
                         }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // TODO: Handle error
-                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        Queue.getInstance(this).addToRequestQueue(jsonObjectRequest);
+                }
+            }
+        });
     }
 
     private void openCamera() {
@@ -150,5 +168,35 @@ public class RegisterActivity extends AppCompatActivity {
 
             //TODO sendPictureToServer();
         }
+    }
+
+    private void downloadQrCode(String url) {
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get(url, new FileAsyncHttpResponseHandler(this) {
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                Toast.makeText(getApplicationContext(), "fetching image failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, File response) {
+                byte[] bytesArray = new byte[(int) response.length()];
+
+                FileInputStream fis = null;
+                try {
+                    fis = new FileInputStream(response);
+                    fis.read(bytesArray); //read file into bytes[]
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // convert byteArray to bitmap and compress it
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytesArray, 0, bytesArray.length);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
+                bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+                qrCode = bitmap;
+            }
+        });
     }
 }

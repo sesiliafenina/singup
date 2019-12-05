@@ -50,9 +50,11 @@ public class MainActivity extends AppCompatActivity {
     private List<Bitmap> imageArray;
     private List<String> eventTime;
     private List<String> eventDate;
+    private List<String> eventLocation;
     private List<URL> urlList;
     private List<JSONArray> guestUrlList;
     private List<List<Bitmap>> guestArray;
+    private List<Bitmap> bmp;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -92,8 +94,15 @@ public class MainActivity extends AppCompatActivity {
                         String eventInfo = infoArray.get(position);
                         Bitmap eventImage = imageArray.get(position);
                         List<Bitmap> guestImages = guestArray.get(position);
+                        String time = eventTime.get(position);
+                        String location = eventLocation.get(position);
+                        String date = eventDate.get(position);
+
                         intent.putExtra("eventName", eventTitle);
                         intent.putExtra("eventInfo", eventInfo);
+                        intent.putExtra("eventDate", date);
+                        intent.putExtra("eventLocation", location);
+                        intent.putExtra("eventTime", time);
                         try {
                             File file = new File(getCacheDir(), "eventImages");
 
@@ -141,9 +150,9 @@ public class MainActivity extends AppCompatActivity {
                 eventDate = new ArrayList<>();
                 urlList = new ArrayList<>();
                 guestUrlList = new ArrayList<>();
-                // If the response is JSONObject instead of expected JSONArray
-                try {
+                eventLocation = new ArrayList<>();
 
+                try {
                     Log.d("Response", response.toString());
                     Toast.makeText(getApplicationContext(), "Http successful", Toast.LENGTH_LONG);
                     Object a = response.getJSONObject(0).getString("id");
@@ -155,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         String startTime = eventDateRaw.split(" ")[1];
                         String endTime = response.getJSONObject(i).getString("end").split(" ")[1];
                         eventTime.add(startTime + " - " + endTime);
+                        eventLocation.add(response.getJSONObject(i).getString("location"));
                         try {
                             URL url = new URL(response.getJSONObject(i).getString("picture"));
                             JSONArray strings = (JSONArray) response.getJSONObject(i).get("speaker_images");
@@ -233,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
         guestArray = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
         for (JSONArray ls : guestUrlList){
-            final List<Bitmap> bmp = new ArrayList<>();
+            bmp = new ArrayList<>();
             for (int i = 0; i < ls.length(); i++) {
                 String str = ls.getString(i);
                 client.get(str, new FileAsyncHttpResponseHandler(this) {

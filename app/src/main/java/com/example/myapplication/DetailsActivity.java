@@ -24,12 +24,19 @@ public class DetailsActivity extends AppCompatActivity {
 
         eventName = getIntent().getStringExtra("eventName");
         String eventInfo = getIntent().getStringExtra("eventInfo");
+        String eventDate = getIntent().getStringExtra("eventDate");
+        String eventLocation = getIntent().getStringExtra("eventLocation");
+        String eventTime = getIntent().getStringExtra("eventTime");
         //Integer eventImage = getIntent().getIntExtra("eventPicture", 0);
         TextView getEventName = findViewById(R.id.eventName);
         TextView getEventInfo = findViewById(R.id.eventDetails);
         ImageView getEventImage = findViewById(R.id.event_image);
+        TextView getEventLocation = findViewById(R.id.eventPlace);
+        TextView getEventTime = findViewById(R.id.eventTime);
         getEventName.setText(eventName);
         getEventInfo.setText(eventInfo);
+        getEventLocation.setText(eventLocation);
+        getEventTime.setText(eventTime);
         //getEventImage.setImageResource(eventImage);
         File cacheFile = new File(getCacheDir(), "eventImages");
         Log.d("DETAILSACTIVITY CACHE DIR", getCacheDir().toString());
