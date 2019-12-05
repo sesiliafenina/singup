@@ -20,23 +20,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.*;
 import cz.msebera.android.httpclient.Header;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectStreamException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.io.File;
+import java.io.IOException;
+
 
 
 //TODO 1.1 Put in some images in the drawables folder
@@ -46,44 +44,24 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
 
-    private List<String> nameArray = new ArrayList<>();
-
-    private List<String> infoArray = new ArrayList<>();
-
-    private List<Bitmap> imageArray = new ArrayList<>();
-
-    private List<String> eventTime = new ArrayList<>();
-
-    private List<String> eventDate = new ArrayList<>();
+    private List<String> nameArray;
+    private List<String> infoArray;
+    private List<Bitmap> imageArray;
+    private List<String> eventTime;
+    private List<String> eventDate;
+    private List<URL> urlList;
+    private List<List<Bitmap>> guestArray;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.eventslist);
 
         final SwipeRefreshLayout swipeRefreshLayout;
-
+        getParams();
+        //Log.d("testing", "HELLO WORLD");
+        //Log.d("List of images", imageArray.toString());
         // have to get lists of name and info of events here
-        CustomListAdapter listAdapter = new CustomListAdapter(this, nameArray, infoArray, imageArray, eventTime);
-
-        listView = findViewById(R.id.listviewID);
-        listView.setAdapter(listAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                String eventTitle = nameArray.get(position); // creates the message. Later this will be event description
-                String eventInfo = infoArray.get(position);
-                Bitmap eventImage = imageArray.get(position);
-                intent.putExtra("eventName", eventTitle);
-                intent.putExtra("eventInfo", eventInfo);
-                intent.putExtra("eventPicture", eventImage);
-                startActivity(intent);
-            }
-        });
-
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.Swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -97,6 +75,35 @@ public class MainActivity extends AppCompatActivity {
                         swipeRefreshLayout.setRefreshing(false);
                     }
                 },4000);
+
+                CustomListAdapter listAdapter = new CustomListAdapter(MainActivity.this, nameArray, infoArray, imageArray, eventTime);
+
+                listView = findViewById(R.id.listviewID);
+                listView.setAdapter(listAdapter);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position,
+                                            long id) {
+                        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                        String eventTitle = nameArray.get(position); // creates the message. Later this will be event description
+                        String eventInfo = infoArray.get(position);
+                        Bitmap eventImage = imageArray.get(position);
+                        intent.putExtra("eventName", eventTitle);
+                        intent.putExtra("eventInfo", eventInfo);
+                        try {
+                            File file = new File(getCacheDir(), "eventImages");
+                            Log.d("Filepath", file.getAbsolutePath());
+                            Log.d("MAIN ACTIVITY CACHE DIR", getCacheDir().toString());
+                            FileOutputStream fOut = new FileOutputStream(file);
+                            eventImage.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+                            fOut.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        startActivity(intent);
+                    }
+                });
             }
         });
     }
@@ -112,8 +119,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                nameArray = new ArrayList<>();
+                infoArray = new ArrayList<>();
+                eventTime = new ArrayList<>();
+                eventDate = new ArrayList<>();
+                urlList = new ArrayList<>();
                 // If the response is JSONObject instead of expected JSONArray
                 try {
+
                     Log.d("Response", response.toString());
                     Toast.makeText(getApplicationContext(), "Http successful", Toast.LENGTH_LONG);
                     Object a = response.getJSONObject(0).getString("id");
@@ -127,24 +140,20 @@ public class MainActivity extends AppCompatActivity {
                         eventTime.add(startTime + " - " + endTime);
                         try {
                             URL url = new URL(response.getJSONObject(i).getString("picture"));
-                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                            connection.setDoInput(true);
-                            connection.connect();
-                            InputStream input = connection.getInputStream();
-                            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                            imageArray.add(myBitmap);
+                            urlList.add(url);
+
                         } catch (IOException e) {
                             // Log exception
                             Log.d("FAILED FETCHING IMAGE", e.toString());
                         }
                     }
-                    Log.d("JSONARRAY LENGTH", String.valueOf(response.length()));
                     Log.d("JSONARRAY OBJECT", a.toString());
                 }
                 catch (JSONException e){
                     Log.d("BEEP!BEEP!BEEP", "SYSTEM FAILURE BLABLA THE CODE HAVE FAILED SO BADLY JUST LIKE" +
                             "HOW THEY NEVER MAKE NGNL SEASON 2");
                 }
+                getGuestImages();
 
             }
 
@@ -159,5 +168,41 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void getGuestImages(){
+        AsyncHttpClient client = new AsyncHttpClient();
+        imageArray = new ArrayList<>();
+        for (URL i : urlList){
+            client.get(i.toString(), new FileAsyncHttpResponseHandler(this){
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                    Toast.makeText(getApplicationContext(), "fetching image failed", Toast.LENGTH_SHORT).show();
+                    Log.d("GETTING IMAGE failed", "getting image failed");
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, File response) {
+                    Log.d("GETTING IMAGE SUCCESSFUL", "getting image successful");
+                    byte[] bytesArray = new byte[(int) response.length()];
+
+                    FileInputStream fis = null;
+                    try {
+                        fis = new FileInputStream(response);
+                        fis.read(bytesArray); //read file into bytes[]
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    // convert byteArray to bitmap and compress it
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytesArray, 0, bytesArray.length);
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
+                    bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+                    imageArray.add(bitmap);
+                }
+            });
+            Log.d("This is iamgeList", imageArray.toString());
+        }
     }
 }

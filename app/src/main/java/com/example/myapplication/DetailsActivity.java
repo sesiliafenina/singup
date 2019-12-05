@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import java.io.File;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -26,7 +30,12 @@ public class DetailsActivity extends AppCompatActivity {
         ImageView getEventImage = findViewById(R.id.event_image);
         getEventName.setText(eventName);
         getEventInfo.setText(eventInfo);
-        getEventImage.setImageResource(eventImage);
+        //getEventImage.setImageResource(eventImage);
+        File cacheFile = new File(getCacheDir(), "eventImages");
+        Log.d("DETAILSACTIVITY CACHE DIR", getCacheDir().toString());
+        String filePath = cacheFile.getPath();
+        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+        getEventImage.setImageBitmap(bitmap);
 
         Button button = findViewById(R.id.registerButton);
         button.setOnClickListener(new View.OnClickListener() {

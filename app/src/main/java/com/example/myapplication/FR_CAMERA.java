@@ -17,13 +17,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import cz.msebera.android.httpclient.Header;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class FR_CAMERA extends AppCompatActivity {
 
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
+    private Bitmap picture;
     Button mCaptureBtn;
     ImageView mImageView;
     Uri image_uri;
@@ -92,23 +99,32 @@ public class FR_CAMERA extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             mImageView.setImageURI(image_uri);
+            Uri imageUri = data.getData();
+            try {
+                picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             //sendPictureToServer();
         }
     }
 
-   /** private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
+   private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
         AsyncHttpClient client = new AsyncHttpClient();
-        getAllParams();
+        //getAllParams();
+
         RequestParams parameters = new RequestParams();
+
+        /*
         parameters.put("title", title);
         parameters.put("description", description);
         parameters.put("location", location);
         for (Bitmap butt : listOfGGuest){
             parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
-        }
-        parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(eventImage)));
-        parameters.put("start", start);
-        parameters.put("end", end);
+        }*/
+        parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(picture)));
+        //parameters.put("start", start);
+        //parameters.put("end", end);
 
         client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
 
@@ -138,5 +154,10 @@ public class FR_CAMERA extends AppCompatActivity {
 
             }
         });
-    }  */
+    }
+    private byte[] bitmapToByteArray(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
 }
