@@ -301,7 +301,6 @@ public class AddEventActivity extends AppCompatActivity {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
                 CharSequence c = "Http failed";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
-                //Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
             }
 
             @Override

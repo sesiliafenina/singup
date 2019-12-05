@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,23 +10,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class CustomListAdapter extends android.widget.ArrayAdapter {
 
     // reference to the activity
     private final Activity context;
 
     // to store the list of titles
-    private final String[] nameArray;
+    private final List<String> nameArray;
 
     // to store the list of information
-    private final String[] infoArray;
+    private final List<String> infoArray;
 
     //to store the animal images
-    private final Integer[] imageIDarray;
+    private final List<Bitmap> imageIDarray;
 
-    private final String[] timeArray;
+    private final List<String> timeArray;
 
-    public CustomListAdapter(Activity context, String[] nameArray, String[] infoArray, Integer[] imageIDarray, String[] timeArray) {
+    public CustomListAdapter(Activity context, List<String> nameArray, List<String> infoArray, List<Bitmap> imageIDarray, List<String> timeArray) {
         super(context, R.layout.listview_row, nameArray);
 
         this.context = context;
@@ -48,9 +51,9 @@ public class CustomListAdapter extends android.widget.ArrayAdapter {
         timeTextField.setTextSize(TypedValue.COMPLEX_UNIT_SP,13);
 
         //this code sets the values of the objects to values from the arrays
-        nameTextField.setText(nameArray[position]);
-        timeTextField.setText(timeArray[position]);
-        imageIDField.setImageResource(imageIDarray[position]);
+        nameTextField.setText(nameArray.get(position));
+        timeTextField.setText(timeArray.get(position));
+        imageIDField.setImageBitmap(imageIDarray.get(position)); // changed this to bitmap
 
         return rowView;
 

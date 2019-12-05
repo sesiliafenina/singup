@@ -7,16 +7,36 @@ package com.example.myapplication;
 // ***Sep 2019
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import cz.msebera.android.httpclient.Header;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectStreamException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 
 //TODO 1.1 Put in some images in the drawables folder
@@ -26,26 +46,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
 
-    private String[] nameArray = {"Google Recruitment Talk", "Apple Recruitment Talk", "Facebook Coding Workshop", "Men in Technology",
-    "How to Fix Your Resume?", "A Better World By Design", "Minecraft Workshop"};
+    private List<String> nameArray = new ArrayList<>();
 
-    private String[] infoArray = {"Google is recruiting and YOU can be one of it!! Register now, slots are limited!",
-            "Apple is recruiting and YOU can be one of it!! Register now, slots are limited!",
-            "Wanna learn how to code better? Attend a coding workshop hosted by Facebook in their headquarters and" +
-                    "use this opportunity to learn what it is like to work in facebook!",
-            "Too many women in tech-related jobs? Fear not! We will be discussing on how men can contribute to technology!",
-            "Your resume looks like its made by a 5 year-old? We are here to fix it! Attend our workshop for free and" +
-                    "fix your resume now! We will be providing free consultation as well!!",
-            "Ever wanted to know how design can impact our daily lives? Join SUTD and you will be exposed to our diverse" +
-                    "environment.",
-            "Wanted to make your own minecraft modpack but don't know how? Well after you attend this workshop you will know" +
-                    "everything you need to know about coding your own modpack and integrating it with minecraft"
-    };
+    private List<String> infoArray = new ArrayList<>();
 
-    private Integer[] imageArray = {R.drawable.google, R.drawable.apple, R.drawable.facebook, R.drawable.menintech, R.drawable.resume,
-                        R.drawable.sutd, R.drawable.minecraft};
+    private List<Bitmap> imageArray = new ArrayList<>();
 
-    private String[] eventTime = {"19:00-22:00", "17:00-18:45", "15:00-19:30", "09:30-15:00", "13:45-16:00", "18:00-20:45", "15:40-19:40"};
+    private List<String> eventTime = new ArrayList<>();
+
+    private List<String> eventDate = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                String eventTitle = nameArray[position]; // creates the message. Later this will be event description
-                String eventInfo = infoArray[position];
-                Integer eventImage = imageArray[position];
+                String eventTitle = nameArray.get(position); // creates the message. Later this will be event description
+                String eventInfo = infoArray.get(position);
+                Bitmap eventImage = imageArray.get(position);
                 intent.putExtra("eventName", eventTitle);
                 intent.putExtra("eventInfo", eventInfo);
                 intent.putExtra("eventPicture", eventImage);
@@ -81,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             public void onRefresh() {
 
                 //TODO http request here
-
+                getParams();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -90,6 +99,65 @@ public class MainActivity extends AppCompatActivity {
                 },4000);
             }
         });
+    }
 
+    private void getParams(){
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.get("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", new JsonHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                // If the response is JSONObject instead of expected JSONArray
+                try {
+                    Log.d("Response", response.toString());
+                    Toast.makeText(getApplicationContext(), "Http successful", Toast.LENGTH_LONG);
+                    Object a = response.getJSONObject(0).getString("id");
+                    for (int i = 0; i < response.length(); i++){
+                        nameArray.add(response.getJSONObject(i).getString("title"));
+                        infoArray.add(response.getJSONObject(i).getString("description"));
+                        String eventDateRaw = response.getJSONObject(i).getString("start");
+                        eventDate.add(eventDateRaw.split(" ")[0]);
+                        String startTime = eventDateRaw.split(" ")[1];
+                        String endTime = response.getJSONObject(i).getString("end").split(" ")[1];
+                        eventTime.add(startTime + " - " + endTime);
+                        try {
+                            URL url = new URL(response.getJSONObject(i).getString("picture"));
+                            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                            connection.setDoInput(true);
+                            connection.connect();
+                            InputStream input = connection.getInputStream();
+                            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                            imageArray.add(myBitmap);
+                        } catch (IOException e) {
+                            // Log exception
+                            Log.d("FAILED FETCHING IMAGE", e.toString());
+                        }
+                    }
+                    Log.d("JSONARRAY LENGTH", String.valueOf(response.length()));
+                    Log.d("JSONARRAY OBJECT", a.toString());
+                }
+                catch (JSONException e){
+                    Log.d("BEEP!BEEP!BEEP", "SYSTEM FAILURE BLABLA THE CODE HAVE FAILED SO BADLY JUST LIKE" +
+                            "HOW THEY NEVER MAKE NGNL SEASON 2");
+                }
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse){
+                Toast.makeText(getApplicationContext(), "Http failed", Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+
+            }
+        });
     }
 }
