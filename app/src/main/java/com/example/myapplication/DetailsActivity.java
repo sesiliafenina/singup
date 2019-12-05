@@ -24,7 +24,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         eventName = getIntent().getStringExtra("eventName");
         String eventInfo = getIntent().getStringExtra("eventInfo");
-        Integer eventImage = getIntent().getIntExtra("eventPicture", 0);
+        //Integer eventImage = getIntent().getIntExtra("eventPicture", 0);
         TextView getEventName = findViewById(R.id.eventName);
         TextView getEventInfo = findViewById(R.id.eventDetails);
         ImageView getEventImage = findViewById(R.id.event_image);
@@ -33,9 +33,22 @@ public class DetailsActivity extends AppCompatActivity {
         //getEventImage.setImageResource(eventImage);
         File cacheFile = new File(getCacheDir(), "eventImages");
         Log.d("DETAILSACTIVITY CACHE DIR", getCacheDir().toString());
-        String filePath = cacheFile.getPath();
-        Bitmap bitmap = BitmapFactory.decodeFile(filePath);
-        getEventImage.setImageBitmap(bitmap);
+        getEventImage.setImageBitmap(BitmapFactory.decodeFile(cacheFile.getPath()));
+
+        ImageView getGuestImage1 = findViewById(R.id.profile_image);
+        ImageView getGuestImage2 = findViewById(R.id.profile_image2);
+        ImageView getGuestImage3 = findViewById(R.id.profile_image3);
+        ImageView getGuestImage4 = findViewById(R.id.profile_image4);
+
+        File guest1 = new File(getCacheDir(), "guestImages1");
+        File guest2 = new File(getCacheDir(), "guestImages2");
+        File guest3 = new File(getCacheDir(), "guestImages3");
+        File guest4 = new File(getCacheDir(), "guestImages4");
+
+        getGuestImage1.setImageBitmap(BitmapFactory.decodeFile(guest1.getPath()));
+        getGuestImage2.setImageBitmap(BitmapFactory.decodeFile(guest2.getPath()));
+        getGuestImage3.setImageBitmap(BitmapFactory.decodeFile(guest3.getPath()));
+        getGuestImage4.setImageBitmap(BitmapFactory.decodeFile(guest4.getPath()));
 
         Button button = findViewById(R.id.registerButton);
         button.setOnClickListener(new View.OnClickListener() {

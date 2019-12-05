@@ -114,7 +114,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/mark"/>
+                    android:background="#FF282828"/>
             <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image2"
@@ -122,7 +122,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/steve"/>
+                    android:background="#FF282828"/>
             <de.hdodenhof.circleimageview.CircleImageView
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/profile_image3"
@@ -130,7 +130,15 @@
                     android:layout_marginRight="10dp"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/norman"/>
+                    android:background="#FF282828"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image4"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="#FF282828"/>
         </LinearLayout>
         <TextView
                 android:layout_width="match_parent"

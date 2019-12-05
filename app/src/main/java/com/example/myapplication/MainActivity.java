@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.loopj.android.http.*;
 import cz.msebera.android.httpclient.Header;
 import org.json.JSONArray;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private List<String> eventTime;
     private List<String> eventDate;
     private List<URL> urlList;
+    private List<JSONArray> guestUrlList;
     private List<List<Bitmap>> guestArray;
 
     @Override
@@ -89,10 +91,12 @@ public class MainActivity extends AppCompatActivity {
                         String eventTitle = nameArray.get(position); // creates the message. Later this will be event description
                         String eventInfo = infoArray.get(position);
                         Bitmap eventImage = imageArray.get(position);
+                        List<Bitmap> guestImages = guestArray.get(position);
                         intent.putExtra("eventName", eventTitle);
                         intent.putExtra("eventInfo", eventInfo);
                         try {
                             File file = new File(getCacheDir(), "eventImages");
+
                             Log.d("Filepath", file.getAbsolutePath());
                             Log.d("MAIN ACTIVITY CACHE DIR", getCacheDir().toString());
                             FileOutputStream fOut = new FileOutputStream(file);
@@ -100,6 +104,18 @@ public class MainActivity extends AppCompatActivity {
                             fOut.close();
                         } catch (IOException e) {
                             e.printStackTrace();
+                        }
+                        int i = 0;
+                        for (Bitmap b : guestImages){
+                            File file2 = new File(getCacheDir(), "guestImages" + i);
+                            try {
+                                FileOutputStream fOut2 = new FileOutputStream(file2);
+                                b.compress(Bitmap.CompressFormat.PNG, 85, fOut2);
+                                fOut2.close();
+                                i++;
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                         startActivity(intent);
                     }
@@ -124,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 eventTime = new ArrayList<>();
                 eventDate = new ArrayList<>();
                 urlList = new ArrayList<>();
+                guestUrlList = new ArrayList<>();
                 // If the response is JSONObject instead of expected JSONArray
                 try {
 
@@ -140,8 +157,9 @@ public class MainActivity extends AppCompatActivity {
                         eventTime.add(startTime + " - " + endTime);
                         try {
                             URL url = new URL(response.getJSONObject(i).getString("picture"));
+                            JSONArray strings = (JSONArray) response.getJSONObject(i).get("speaker_images");
                             urlList.add(url);
-
+                            guestUrlList.add(strings);
                         } catch (IOException e) {
                             // Log exception
                             Log.d("FAILED FETCHING IMAGE", e.toString());
@@ -153,7 +171,12 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("BEEP!BEEP!BEEP", "SYSTEM FAILURE BLABLA THE CODE HAVE FAILED SO BADLY JUST LIKE" +
                             "HOW THEY NEVER MAKE NGNL SEASON 2");
                 }
-                getGuestImages();
+                getEventImages();
+                try {
+                    getGuestImages();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -170,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getGuestImages(){
+    private void getEventImages(){
         AsyncHttpClient client = new AsyncHttpClient();
         imageArray = new ArrayList<>();
         for (URL i : urlList){
@@ -203,6 +226,48 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             Log.d("This is iamgeList", imageArray.toString());
+        }
+    }
+
+    private void getGuestImages() throws JSONException {
+        guestArray = new ArrayList<>();
+        AsyncHttpClient client = new AsyncHttpClient();
+        for (JSONArray ls : guestUrlList){
+            final List<Bitmap> bmp = new ArrayList<>();
+            for (int i = 0; i < ls.length(); i++) {
+                String str = ls.getString(i);
+                client.get(str, new FileAsyncHttpResponseHandler(this) {
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
+                        Toast.makeText(getApplicationContext(), "fetching image failed", Toast.LENGTH_SHORT).show();
+                        Log.d("GETTING IMAGE failed", "getting image failed");
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, File response) {
+                        Log.d("GETTING IMAGE SUCCESSFUL", "getting image successful");
+                        byte[] bytesArray = new byte[(int) response.length()];
+
+                        FileInputStream fis = null;
+                        try {
+                            fis = new FileInputStream(response);
+                            fis.read(bytesArray); //read file into bytes[]
+                            fis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        // convert byteArray to bitmap and compress it
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytesArray, 0, bytesArray.length);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
+                        bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+                        bmp.add(bitmap);
+                    }
+                });
+            }
+            guestArray.add(bmp);
+            Log.d("This is guestList", guestArray.toString());
         }
     }
 }
