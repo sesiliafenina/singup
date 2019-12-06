@@ -35,7 +35,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
             android:layout_width="match_parent"
-            android:layout_height="670dp"
+            android:layout_height="580dp"
             android:divider="#AAAAAAAA"
             android:dividerHeight="1dp"
             android:layout_marginStart="10dp"

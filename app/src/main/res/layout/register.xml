@@ -14,7 +14,7 @@
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:textSize="30sp"
-            android:textColor="#47D476"
+            android:textColor="#FF47D476"
             android:layout_marginBottom="20dp"
             android:layout_gravity="center"
             android:textAlignment="center"

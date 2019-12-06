@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -33,7 +34,8 @@ import java.util.List;
 public class RegisterActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
     private static final int IMAGE_CAPTURE_CODE = 1001;
-    private Bitmap qrCode;
+    private Bitmap picture;
+    public static String qrlink;
     Button mCaptureBtn;
     Uri image_uri;
 
@@ -56,11 +58,19 @@ public class RegisterActivity extends AppCompatActivity {
                         requestPermissions(permission, PERMISSION_CODE);
                     }
                     else{
-                        openCamera();
+                        try {
+                            openCamera();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
                 else{
-                    openCamera();
+                    try {
+                        openCamera();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -88,26 +98,31 @@ public class RegisterActivity extends AppCompatActivity {
         RequestParams params = new RequestParams();
         params.put("email", email);
         params.put("name", name);
+
         AsyncHttpClient client = new AsyncHttpClient();
+        client.setEnableRedirects(true);
+        client.addHeader("Accept", "application/json");
         client.post(url, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 CharSequence c = "Registered";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
                 try {
-                    String qrLink = response.getString("response");
-                    downloadQrCode(qrLink);
-                    File file = new File(getCacheDir(), "qrCode");
-                    FileOutputStream fOut = new FileOutputStream(file);
-                    qrCode.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                    fOut.close();
-                    // download image here
-                } catch (JSONException | IOException e) {
+                    String qrLink = response.getString("qr_link");
+                    Log.d("QR LINK", qrLink);
+                    qrlink = qrLink;
+                    //downloadQrCode(qrLink);
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 //move to a different intent here
                 Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String string, Throwable throwable) {
+                Log.d("ERROR MESSAGE String", string);
             }
 
             @Override
@@ -133,7 +148,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void openCamera() {
+    private void openCamera() throws IOException {
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE,"New Picture");
         values.put(MediaStore.Images.Media.DESCRIPTION,"From camera");
@@ -141,7 +156,8 @@ public class RegisterActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
         startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE);
-        //sendPictureToServer();
+        picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
+        sendPictureToServer();
 
 
     }
@@ -151,7 +167,11 @@ public class RegisterActivity extends AppCompatActivity {
         switch(requestCode){
             case PERMISSION_CODE:{
                 if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    openCamera();
+                    try {
+                        openCamera();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 else{
                     Toast.makeText(this, "Permissied denied", Toast.LENGTH_SHORT).show();
@@ -166,37 +186,59 @@ public class RegisterActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
 
-            //TODO sendPictureToServer();
+            sendPictureToServer();
         }
     }
 
-    private void downloadQrCode(String url) {
+    private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
         AsyncHttpClient client = new AsyncHttpClient();
-        client.get(url, new FileAsyncHttpResponseHandler(this) {
+        //getAllParams();
+
+        RequestParams parameters = new RequestParams();
+
+        /*
+        parameters.put("title", title);
+        parameters.put("description", description);
+        parameters.put("location", location);
+        for (Bitmap butt : listOfGGuest){
+            parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
+        }*/
+        parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(picture)));
+        //parameters.put("start", start);
+        //parameters.put("end", end);
+
+        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
-                Toast.makeText(getApplicationContext(), "fetching image failed", Toast.LENGTH_SHORT).show();
+            public void onStart() {
+                // called before request is started
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, File response) {
-                byte[] bytesArray = new byte[(int) response.length()];
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                CharSequence c = "Http successful";
+                Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+                // called when response HTTP status is "200 OK"
+            }
 
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(response);
-                    fis.read(bytesArray); //read file into bytes[]
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // convert byteArray to bitmap and compress it
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytesArray, 0, bytesArray.length);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
-                bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-                qrCode = bitmap;
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                // called when response HTTP status is "4XX" (eg. 401, 403, 404)
+                CharSequence c = "Http failed";
+                Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+
             }
         });
+    }
+    private byte[] bitmapToByteArray(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 }

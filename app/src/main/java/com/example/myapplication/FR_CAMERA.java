@@ -74,9 +74,7 @@ public class FR_CAMERA extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
         startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE);
-        //sendPictureToServer();
-
-
+        sendPictureToServer();
     }
 
     @Override
@@ -105,7 +103,7 @@ public class FR_CAMERA extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //sendPictureToServer();
+            sendPictureToServer();
         }
     }
 

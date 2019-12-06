@@ -47,15 +47,6 @@ public class AddEventActivity extends AppCompatActivity {
         final TextView mTextView = findViewById(R.id.textCounter);
         final EditText mEditText = findViewById(R.id.eventDescription);
 
-        Button toEventPageButton = findViewById(R.id.toEventPageButton);
-        toEventPageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openMainActivity(); //to Nina's events page
-
-            }
-        });
-
         Button button = findViewById(R.id.addImage);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +123,6 @@ public class AddEventActivity extends AppCompatActivity {
 
                 ImageView imageView = findViewById(R.id.registerEventImage);
                 imageView.setImageBitmap(bitmap);
-                // TODO : also add the bitmap to a list of images to send to the server
                 eventImage = bitmap;
 
             } catch (IOException e) {
@@ -150,7 +140,6 @@ public class AddEventActivity extends AppCompatActivity {
 
                 ImageView imageView = findViewById(R.id.guestImage);
                 imageView.setImageBitmap(bitmap);
-                // TODO : also add the bitmap to a list of images to send to the server
                 listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -166,7 +155,6 @@ public class AddEventActivity extends AppCompatActivity {
 
                 ImageView imageView = findViewById(R.id.guestImage2);
                 imageView.setImageBitmap(bitmap);
-                // TODO : also add the bitmap to a list of images to send to the server
                 listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -182,7 +170,6 @@ public class AddEventActivity extends AppCompatActivity {
 
                 ImageView imageView = findViewById(R.id.guestImage3);
                 imageView.setImageBitmap(bitmap);
-                // TODO : also add the bitmap to a list of images to send to the server
                 listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -198,7 +185,6 @@ public class AddEventActivity extends AppCompatActivity {
 
                 ImageView imageView = findViewById(R.id.guestImage4);
                 imageView.setImageBitmap(bitmap);
-                // TODO : also add the bitmap to a list of images to send to the server
                 listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -241,39 +227,6 @@ public class AddEventActivity extends AppCompatActivity {
         }
     }
 
-    private void sendAddEventForm()
-
-    {
-        String charset = "UTF-8";
-        String requestURL = "http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/";
-        File uploadFile1 = new File("C:\\Users\\Sesilia Fenina G\\Desktop\\Screenshot_1575301493.png");
-        File uploadFile2 = new File("C:\\Users\\Sesilia Fenina G\\Desktop\\Screenshot_1575301493.png");
-
-        try {
-            MultipartUtility multipart = new MultipartUtility(requestURL, charset);
-            multipart.addHeaderField("User-Agent", "CodeJava");
-            multipart.addHeaderField("Test-Header", "Header-Value");
-
-            multipart.addFormField("description", "Cool Pictures");
-            multipart.addFormField("keywords", "Java,upload,Spring");
-
-            multipart.addFilePart("fileUpload", uploadFile1);
-            multipart.addFilePart("fileUpload", uploadFile2);
-
-            List<String> response = multipart.finish();
-
-            System.out.println("SERVER REPLIED:");
-
-            for (String line : response) {
-                System.out.println(line);
-            }
-        }
-        catch (IOException ex){
-            System.err.println(ex);
-            Log.d(" HTTP MULTI PART FORM FAILURE", ex.toString());
-        }
-    }
-
     private void sendEventForm2(){
         AsyncHttpClient client = new AsyncHttpClient();
         getAllParams();
@@ -299,7 +252,9 @@ public class AddEventActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 CharSequence c = "Http successful";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
-                // called when response HTTP status is "200 OK"
+
+                Intent intent = new Intent(AddEventActivity.this, EventCreatedActivity.class);
+                startActivity(intent);
             }
 
             @Override
@@ -343,10 +298,5 @@ public class AddEventActivity extends AppCompatActivity {
         EditText endTime = findViewById(R.id.eventEndTime);
         String endT = endTime.getText().toString();
         end = date + " " + endT;
-    }
-
-    public void openMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 }

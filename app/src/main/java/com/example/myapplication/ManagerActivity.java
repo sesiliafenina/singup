@@ -15,11 +15,6 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 public class ManagerActivity extends AppCompatActivity {
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -67,7 +62,8 @@ public class ManagerActivity extends AppCompatActivity {
                 Toast.makeText(this,"Scanning cancelled",Toast.LENGTH_LONG).show();
             }
             else{
-                Toast.makeText(this,result.getContents(),Toast.LENGTH_LONG).show();
+                Toast.makeText(this, result.getContents(),Toast.LENGTH_LONG).show();
+
             }
         }
         else{

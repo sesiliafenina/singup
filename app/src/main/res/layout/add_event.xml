@@ -298,22 +298,7 @@
          android:background="@drawable/rounded_button"
          android:text="Add Event"
          android:layout_gravity="center" />
-
-         <Button
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:id="@+id/toEventPageButton"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:text="To Event Page"
-        android:background="@drawable/rounded_button"
-        android:layout_gravity="center"/>
-
      </LinearLayout>
-
-
-
-
     </LinearLayout>
     </ScrollView>
 </LinearLayout>

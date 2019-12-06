@@ -31,6 +31,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import java.io.File;
@@ -205,8 +206,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void getEventImages(){
         AsyncHttpClient client = new AsyncHttpClient();
-        imageArray = new ArrayList<>();
-        for (URL i : urlList){
+        imageArray = new ArrayList<Bitmap>(Collections.<Bitmap>nCopies(urlList.size(), null));
+        for (int j=0; j<urlList.size(); j++){
+            final int jj = j;
+            URL i = urlList.get(j);
             client.get(i.toString(), new FileAsyncHttpResponseHandler(this){
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
@@ -232,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytesArray, 0, bytesArray.length);
                     bitmap.compress(Bitmap.CompressFormat.PNG, 30, out);
                     bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-                    imageArray.add(bitmap);
+                    imageArray.set(jj, bitmap);
                 }
             });
             Log.d("This is iamgeList", imageArray.toString());
@@ -242,10 +245,11 @@ public class MainActivity extends AppCompatActivity {
     private void getGuestImages() throws JSONException {
         guestArray = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
-        for (JSONArray ls : guestUrlList){
-            bmp = new ArrayList<>();
-            for (int i = 0; i < ls.length(); i++) {
+            for (JSONArray ls : guestUrlList){
+                bmp = new ArrayList<>();
+                for (int i = 0; i < ls.length(); i++) {
                 String str = ls.getString(i);
+                Log.d("THIS IS GETGUESIIMAGE URL", str);
                 client.get(str, new FileAsyncHttpResponseHandler(this) {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, File file) {
@@ -277,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
             guestArray.add(bmp);
-            Log.d("This is guestList", guestArray.toString());
+            //Log.d("This is guestList", guestArray.toString());
         }
     }
 }

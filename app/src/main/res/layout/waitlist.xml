@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="#FF282828"
+              android:layout_height="match_parent">
+<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FF47D476"
+        android:text="You have been put on a waitlist"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:layout_marginTop="200dp"
+        android:textSize="50dp"/>
+    <TextView
+            android:layout_marginTop="10dp"
+            android:textColor="#ffe2e2e2"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:text="You will be notified by email 3 days prior if you have successfully registered to the event"/>
+    <Button
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/toEventPageButton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="To Event Page"
+            android:background="@drawable/rounded_button"
+            android:layout_gravity="center"/>
+</LinearLayout>

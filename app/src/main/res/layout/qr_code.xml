@@ -4,18 +4,30 @@
               android:layout_width="match_parent"
               android:background="#FF282828"
               android:layout_height="match_parent">
-    <ImageView
-            android:layout_marginTop="200dp"
-            android:id="@+id/qrCode"
-            android:layout_width="wrap_content"
+    <TextView
+            android:layout_marginTop="50dp"
             android:layout_gravity="center"
-            android:layout_height="wrap_content"/>
-    <TextView
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textColor="#FF47D476"
+            android:textSize="50sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/title"/>
+            android:text="Here is your QR Code"/>
+    <ImageView
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:id="@+id/qrCodes"
+            android:layout_width="200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/qr_code_icon"
+            android:layout_height="200dp"/>
     <TextView
+            android:textColor="#ffe2e2e2"
+            android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/userId"/>
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:text="Please screenshot this QR Code as you will need it to attend the event"/>
 </LinearLayout>
