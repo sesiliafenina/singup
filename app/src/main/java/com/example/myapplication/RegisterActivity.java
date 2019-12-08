@@ -158,8 +158,6 @@ public class RegisterActivity extends AppCompatActivity {
         startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE);
         picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
         sendPictureToServer();
-
-
     }
 
     @Override
@@ -180,7 +178,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -188,26 +186,21 @@ public class RegisterActivity extends AppCompatActivity {
 
             sendPictureToServer();
         }
-    }
+    }*/
 
     private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
         AsyncHttpClient client = new AsyncHttpClient();
-        //getAllParams();
 
+        EditText emailtext = findViewById(R.id.email);
+        EditText nameText = findViewById(R.id.name);
+        String email = emailtext.getText().toString();
+        String name = nameText.getText().toString();
         RequestParams parameters = new RequestParams();
+        parameters.put("name", name);
+        parameters.put("email", email);
+        parameters.put("selfie", new ByteArrayInputStream(bitmapToByteArray(picture)));
 
-        /*
-        parameters.put("title", title);
-        parameters.put("description", description);
-        parameters.put("location", location);
-        for (Bitmap butt : listOfGGuest){
-            parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
-        }*/
-        parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(picture)));
-        //parameters.put("start", start);
-        //parameters.put("end", end);
-
-        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
+        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/selfie", parameters, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {

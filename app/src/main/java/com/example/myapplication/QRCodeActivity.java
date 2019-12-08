@@ -35,12 +35,19 @@ public class QRCodeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
 
-        //File qrCode = new File(getCacheDir(), "qrCode");
-        //imageView.setImageBitmap(BitmapFactory.decodeFile(qrCode.getPath()));
         setContentView(R.layout.qr_code);
         downloadQrCode(RegisterActivity.qrlink);
-
-
+        Button toEventPageButton = findViewById(R.id.toEventPageButton);
+        toEventPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openMainActivity(); //to Nina's events page
+            }
+        });
+    }
+    private void openMainActivity() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     private void downloadQrCode(String url) {
