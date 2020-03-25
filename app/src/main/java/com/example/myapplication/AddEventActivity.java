@@ -3,6 +3,7 @@ package com.example.myapplication;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -61,7 +62,7 @@ public class AddEventActivity extends AppCompatActivity {
                 pickGuestImage(R.id.guestImage);
             }
         });
-
+        /*
         Button button3 = findViewById(R.id.addGuest2);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +85,7 @@ public class AddEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pickGuestImage(R.id.guestImage4);
             }
-        });
+        });*/
 
         Button register = findViewById(R.id.addEvent);
         register.setOnClickListener(new View.OnClickListener() {
@@ -130,7 +131,7 @@ public class AddEventActivity extends AppCompatActivity {
             }
         }
 
-        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == GUEST_IMAGE_REQUEST_CODE_1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
 
@@ -145,6 +146,7 @@ public class AddEventActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        /*
         else if (requestCode == GUEST_IMAGE_REQUEST_CODE_2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -189,7 +191,7 @@ public class AddEventActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     private void pickEventImage(){
@@ -211,11 +213,12 @@ public class AddEventActivity extends AppCompatActivity {
         intent.setType("image/*");
         //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
         String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // Launching the Intent
         if (R.id.guestImage == id) {
             startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_1);
         }
+        /*
         else if (R.id.guestImage2 == id) {
             startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_2);
         }
@@ -224,7 +227,7 @@ public class AddEventActivity extends AppCompatActivity {
         }
         else if (R.id.guestImage4 == id) {
             startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_4);
-        }
+        }*/
     }
 
     private void sendEventForm2(){
@@ -241,7 +244,7 @@ public class AddEventActivity extends AppCompatActivity {
         parameters.put("start", start);
         parameters.put("end", end);
 
-        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
+        client.post("http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {

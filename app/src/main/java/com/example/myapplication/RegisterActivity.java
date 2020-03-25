@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendRegistrationForm() {
 
-        String url = "http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/QR";
+        String url = "http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/QR";
         EditText emailtext = findViewById(R.id.email);
         EditText nameText = findViewById(R.id.name);
         String email = emailtext.getText().toString();
@@ -200,7 +200,7 @@ public class RegisterActivity extends AppCompatActivity {
         parameters.put("email", email);
         parameters.put("selfie", new ByteArrayInputStream(bitmapToByteArray(picture)));
 
-        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/selfie", parameters, new AsyncHttpResponseHandler() {
+        client.post("http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/selfie", parameters, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {

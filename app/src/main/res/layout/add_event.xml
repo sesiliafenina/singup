@@ -231,6 +231,7 @@
                         android:layout_centerInParent="true"
                         android:background="@android:color/darker_gray"/>
             </RelativeLayout>
+            <!--
             <RelativeLayout
                     android:layout_marginRight="10dp"
                     android:layout_width="wrap_content"
@@ -281,6 +282,7 @@
                         android:layout_centerInParent="true"
                         android:background="@android:color/darker_gray"/>
             </RelativeLayout>
+            -->
         </LinearLayout>
     </HorizontalScrollView>
 

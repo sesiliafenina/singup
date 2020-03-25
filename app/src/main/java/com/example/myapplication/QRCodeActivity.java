@@ -62,7 +62,7 @@ public class QRCodeActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, File response) {
                 byte[] bytesArray = new byte[(int) response.length()];
-                Log.d("DOWNLOAD QR CODE SUCCESSFUL", "LOLOLOLOLOOL");
+                Log.d("QR Code downloaded", "Attempt in downloading QR code successful");
                 Log.d("THIS IS FILE", response.toString());
 /*
                 FileInputStream fis = null;

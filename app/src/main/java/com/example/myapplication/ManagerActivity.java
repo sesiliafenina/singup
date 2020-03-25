@@ -84,7 +84,7 @@ public class ManagerActivity extends AppCompatActivity {
         parameters.put("qr_secret", str);
         parameters.put("mode", "norman");
 
-        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/attendance/QR", parameters, new AsyncHttpResponseHandler() {
+        client.post("http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/attendance/QR", parameters, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {

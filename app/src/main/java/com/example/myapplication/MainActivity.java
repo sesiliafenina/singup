@@ -28,15 +28,19 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.concurrent.ExecutionException;
+import java.util.jar.JarOutputStream;
 
 
 //TODO 1.1 Put in some images in the drawables folder
@@ -135,76 +139,92 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getParams(){
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.get("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", new JsonHttpResponseHandler() {
+        String url = "http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events";
+        String result = null;
+        JSONArray response = new JSONArray(); // initialize with no default value
 
-            @Override
-            public void onStart() {
-                // called before request is started
-            }
+        HttpGetStringRequest getRequest = new HttpGetStringRequest();
+        try {
+            result = getRequest.execute(url).get();
+        }
+        catch (InterruptedException | ExecutionException e){
+            Log.e("MainActivity", "Thread is interrupted!", e);
+        }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                nameArray = new ArrayList<>();
-                infoArray = new ArrayList<>();
-                eventTime = new ArrayList<>();
-                eventDate = new ArrayList<>();
-                urlList = new ArrayList<>();
-                guestUrlList = new ArrayList<>();
-                eventLocation = new ArrayList<>();
+        if (result == null){
+            Toast.makeText(getApplicationContext(), "There is no current events", Toast.LENGTH_LONG).show();
+        }
 
+        Log.d("Response", result);
+
+        try{
+            response = new JSONArray(result);
+        }catch (JSONException e){
+            Log.e("MainActivity", "Could not parse malformed JSON", e);
+        }
+        Toast.makeText(getApplicationContext(), "Http successful", Toast.LENGTH_LONG).show();
+
+
+        nameArray = new ArrayList<>();
+        infoArray = new ArrayList<>();
+        eventTime = new ArrayList<>();
+        eventDate = new ArrayList<>();
+        urlList = new ArrayList<>();
+        guestUrlList = new ArrayList<>();
+        eventLocation = new ArrayList<>();
+        try {
+            for (int i = 0; i < response.length(); i++) {
+                nameArray.add(response.getJSONObject(i).getString("title"));
+                infoArray.add(response.getJSONObject(i).getString("description"));
+                String eventDateRaw = response.getJSONObject(i).getString("start");
+                eventDate.add(eventDateRaw.split(" ")[0]);
+                String startTime = eventDateRaw.split(" ")[1];
+                String endTime = response.getJSONObject(i).getString("end").split(" ")[1];
+                eventTime.add(startTime + " - " + endTime);
+                eventLocation.add(response.getJSONObject(i).getString("location"));
                 try {
-                    Log.d("Response", response.toString());
-                    Toast.makeText(getApplicationContext(), "Http successful", Toast.LENGTH_LONG);
-                    Object a = response.getJSONObject(0).getString("id");
-                    for (int i = 0; i < response.length(); i++){
-                        nameArray.add(response.getJSONObject(i).getString("title"));
-                        infoArray.add(response.getJSONObject(i).getString("description"));
-                        String eventDateRaw = response.getJSONObject(i).getString("start");
-                        eventDate.add(eventDateRaw.split(" ")[0]);
-                        String startTime = eventDateRaw.split(" ")[1];
-                        String endTime = response.getJSONObject(i).getString("end").split(" ")[1];
-                        eventTime.add(startTime + " - " + endTime);
-                        eventLocation.add(response.getJSONObject(i).getString("location"));
-                        try {
-                            URL url = new URL(response.getJSONObject(i).getString("picture"));
-                            JSONArray strings = (JSONArray) response.getJSONObject(i).get("speaker_images");
-                            urlList.add(url);
-                            guestUrlList.add(strings);
-                        } catch (IOException e) {
-                            // Log exception
-                            Log.d("FAILED FETCHING IMAGE", e.toString());
-                        }
-                    }
-                    Log.d("JSONARRAY OBJECT", a.toString());
+                    URL picture = new URL(response.getJSONObject(i).getString("picture"));
+                    JSONArray strings = (JSONArray) response.getJSONObject(i).get("speaker_images");
+                    urlList.add(picture);
+                    guestUrlList.add(strings);
+                } catch (MalformedURLException e) {
+                    // Log exception
+                    Log.e("MainActivity", "Invalid URL given", e);
                 }
-                catch (JSONException e){
-                    Log.d("BEEP!BEEP!BEEP", "SYSTEM FAILURE BLABLA THE CODE HAVE FAILED SO BADLY JUST LIKE" +
-                            "HOW THEY NEVER MAKE NGNL SEASON 2");
-                }
-                getEventImages();
-                try {
-                    getGuestImages();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
             }
+        }
+        catch (JSONException e){
+            Log.e("MainActivity", "JSON Object not found", e);
+        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONArray errorResponse){
-                Toast.makeText(getApplicationContext(), "Http failed", Toast.LENGTH_LONG);
-            }
-
-            @Override
-            public void onRetry(int retryNo) {
-                // called when request is retried
-
-            }
-        });
+        getEventImages();
+        try {
+            getGuestImages();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getEventImages(){
+
+        imageArray = new ArrayList<Bitmap>(Collections.<Bitmap>nCopies(urlList.size(), null));
+        HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
+
+        for (int j =0; j<urlList.size(); j++){
+            Bitmap bitmap = null;
+            try {
+                bitmap = getImageRequest.execute(urlList.get(j).toString()).get();
+            }
+            catch (InterruptedException | ExecutionException e){
+                Log.e("MainActivity", "Thread is interrupted!", e);
+            }
+            if (bitmap == null){
+                Log.e("MainActivity", "Failed fetching image from url");
+            }
+            imageArray.set(j, bitmap);
+        }
+
+        /*
         AsyncHttpClient client = new AsyncHttpClient();
         imageArray = new ArrayList<Bitmap>(Collections.<Bitmap>nCopies(urlList.size(), null));
         for (int j=0; j<urlList.size(); j++){
@@ -239,10 +259,34 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
             Log.d("This is iamgeList", imageArray.toString());
-        }
+        }*/
     }
 
     private void getGuestImages() throws JSONException {
+
+        guestArray = new ArrayList<>();
+
+        for (JSONArray ja : guestUrlList){
+            bmp = new ArrayList<>();
+            for (int j =0; j<ja.length(); j++){
+                HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
+                Bitmap bitmap = null;
+                try {
+                    bitmap = getImageRequest.execute(ja.getString(j)).get();
+                    bmp.add(bitmap);
+                }
+                catch (InterruptedException | ExecutionException e){
+                    Log.e("MainActivity", "Thread is interrupted!", e);
+                }
+                if (bitmap == null){
+                    Log.e("MainActivity", "Failed fetching image from url");
+                }
+            }
+        }
+        guestArray.add(bmp);
+
+
+        /*
         guestArray = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
             for (JSONArray ls : guestUrlList){
@@ -282,6 +326,6 @@ public class MainActivity extends AppCompatActivity {
             }
             guestArray.add(bmp);
             //Log.d("This is guestList", guestArray.toString());
-        }
+        }*/
     }
 }
