@@ -3,7 +3,9 @@ package com.example.myapplication;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,8 +20,11 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
+import java.util.concurrent.ExecutionException;
 
 public class ManagerActivity extends AppCompatActivity {
     @Override
@@ -79,6 +84,29 @@ public class ManagerActivity extends AppCompatActivity {
     }
 
     private void sendEventForm2(String str){
+        String url = "http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/attendance/QR";
+        String result = null;
+        JSONObject response = new JSONObject(); // initialize with no default value
+        HttpPostStringRequest postStringRequest = new HttpPostStringRequest();
+        postStringRequest.addParams("qr_secret", str);
+        postStringRequest.addParams("mode", "norman");
+
+        try {
+            result = postStringRequest.execute(url).get();
+        }
+        catch (InterruptedException | ExecutionException e){
+            Log.e("MainActivity", "Thread is interrupted!", e);
+        }
+
+        if (result == null){
+            Toast.makeText(getApplicationContext(), "Attendee does not exist!", Toast.LENGTH_LONG).show();
+            return;
+        }
+        // TODO: parse response here to see if http request is successful
+
+        Toast.makeText(getApplicationContext(), "Successfully Registered!", Toast.LENGTH_LONG).show();
+
+        /*
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams parameters = new RequestParams();
         parameters.put("qr_secret", str);
@@ -112,6 +140,6 @@ public class ManagerActivity extends AppCompatActivity {
                 // called when request is retried
 
             }
-        });
+        });*/
     }
 }
