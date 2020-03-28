@@ -10,6 +10,7 @@ public class EventCreatedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
+        setContentView(R.layout.event_created);
         Button toEventPageButton = findViewById(R.id.toEventPageButton);
         toEventPageButton.setOnClickListener(new View.OnClickListener() {
             @Override

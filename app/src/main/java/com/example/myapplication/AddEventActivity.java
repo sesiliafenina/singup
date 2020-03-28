@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.print.PrintAttributes;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import cz.msebera.android.httpclient.Header;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +26,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class AddEventActivity extends AppCompatActivity {
     private int EVENT_IMAGE_REQUEST_CODE = 1;
@@ -231,8 +237,47 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private void sendEventForm2(){
-        AsyncHttpClient client = new AsyncHttpClient();
+        //AsyncHttpClient client = new AsyncHttpClient();
+
+        String result = null;
+        JSONObject response = new JSONObject(); // initialize with no default value
+        String url = "http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events";
+
         getAllParams();
+
+        HttpPostStringRequest postRequest = new HttpPostStringRequest();
+        postRequest.addParams("title", title);
+        postRequest.addParams("description", description);
+        postRequest.addParams("location", location);
+        postRequest.addParams("start", start);
+        postRequest.addParams("end", end);
+        postRequest.addParams("picture", new ByteArrayInputStream(bitmapToByteArray(eventImage)));
+        for (Bitmap butt : listOfGGuest){
+            postRequest.addParams("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
+        }
+
+        try {
+            result = postRequest.execute(url).get();
+        }
+        catch (InterruptedException | ExecutionException e){
+            Log.e("MyApplication", "Post Request is interrupted!", e);
+        }
+
+        assert result != null;
+        Log.d("Response", result);
+
+        /*
+        try{
+            response = new JSONObject(result);
+        }catch (JSONException e){
+            Log.e("MainActivity", "Could not parse malformed JSON", e);
+        }*/
+
+        Toast.makeText(getApplicationContext(), "Event Created!", Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(AddEventActivity.this, EventCreatedActivity.class);
+        startActivity(intent);
+        /*
         RequestParams parameters = new RequestParams();
         parameters.put("title", title);
         parameters.put("description", description);
@@ -272,7 +317,7 @@ public class AddEventActivity extends AppCompatActivity {
                 // called when request is retried
 
             }
-        });
+        });*/
     }
 
     private byte[] bitmapToByteArray(Bitmap bitmap){
@@ -283,22 +328,104 @@ public class AddEventActivity extends AppCompatActivity {
 
     private void getAllParams(){
         EditText eventTitle = findViewById(R.id.eventTitle);
+        if(eventTitle.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Event Title cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
         title = eventTitle.getText().toString();
 
         EditText eventDescription = findViewById(R.id.eventDescription);
+        if(eventDescription.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Event Description cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
         description = eventDescription.getText().toString();
 
         EditText eventLocation = findViewById(R.id.eventLocation);
+        if(eventLocation.getText().toString().equals("")){
+            Toast.makeText(getApplicationContext(), "Event Location cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
         location = eventLocation.getText().toString();
 
         EditText dateD = findViewById(R.id.eventDate);
+        String tempDate = dateD.getText().toString();
+        if (tempDate.equals("")){
+            Toast.makeText(getApplicationContext(), "Date cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+        try {
+            String year = tempDate.split("-")[0];
+            String month = tempDate.split("-")[1];
+            if (Integer.parseInt(month) > 12) {
+                Toast.makeText(getApplicationContext(), "Invalid month", Toast.LENGTH_LONG).show();
+                return;
+            }
+            String day = tempDate.split("-")[2];
+            if (Integer.parseInt(day) > 31) {
+                Toast.makeText(getApplicationContext(), "Invalid day", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            Toast.makeText(getApplicationContext(), "Invalid date format", Toast.LENGTH_LONG).show();
+            return;
+        }
         date = dateD.getText().toString();
 
         EditText startTime = findViewById(R.id.eventStartTime);
+        String tempStart = startTime.getText().toString();
+
+        if (tempStart.equals("")){
+            Toast.makeText(getApplicationContext(), "Start Time cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        try{
+            String hour = tempStart.split(":")[0];
+            if (Integer.parseInt(hour) > 23) {
+                Toast.makeText(getApplicationContext(), "Invalid hour", Toast.LENGTH_LONG).show();
+                return;
+            }
+            String minute = tempStart.split(":")[1];
+            if (Integer.parseInt(minute) > 60) {
+                Toast.makeText(getApplicationContext(), "Invalid minute", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+            Toast.makeText(getApplicationContext(), "Invalid time format", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String startT = startTime.getText().toString();
         start = date + " " + startT;
 
         EditText endTime = findViewById(R.id.eventEndTime);
+        String tempEnd = endTime.getText().toString();
+
+        if (tempEnd.equals("")){
+            Toast.makeText(getApplicationContext(), "End Time cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        try{
+            String hour = tempEnd.split(":")[0];
+            if (Integer.parseInt(hour) > 23) {
+                Toast.makeText(getApplicationContext(), "Invalid hour", Toast.LENGTH_LONG).show();
+                return;
+            }
+            String minute = tempEnd.split(":")[1];
+            if (Integer.parseInt(minute) > 60) {
+                Toast.makeText(getApplicationContext(), "Invalid minute", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        catch (PatternSyntaxException e){
+            Toast.makeText(getApplicationContext(), "Invalid time format", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         String endT = endTime.getText().toString();
         end = date + " " + endT;
     }

@@ -75,9 +75,7 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
                 //TODO http request here
-                getParams();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -134,6 +132,14 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 });
+                Handler mainHandler = new Handler(MainActivity.this.getApplicationContext().getMainLooper());
+                Runnable myRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        getParams();
+                    }
+                };
+                mainHandler.post(myRunnable);
             }
         });
     }
@@ -197,20 +203,37 @@ public class MainActivity extends AppCompatActivity {
             Log.e("MainActivity", "JSON Object not found", e);
         }
 
-        getEventImages();
-        try {
-            getGuestImages();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Handler mainHandler = new Handler(this.getApplicationContext().getMainLooper());
+        Runnable myRunnable = new Runnable() {
+            @Override
+            public void run() {
+                getEventImages();
+            }
+        };
+        mainHandler.post(myRunnable);
+
+        Handler mainHandler2 = new Handler(this.getApplicationContext().getMainLooper());
+        Runnable myRunnable2 = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getGuestImages();
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        mainHandler2.post(myRunnable2);
     }
 
     private void getEventImages(){
 
         imageArray = new ArrayList<Bitmap>(Collections.<Bitmap>nCopies(urlList.size(), null));
-        HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
+
 
         for (int j =0; j<urlList.size(); j++){
+            HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
             Bitmap bitmap = null;
             try {
                 bitmap = getImageRequest.execute(urlList.get(j).toString()).get();
@@ -263,25 +286,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getGuestImages() throws JSONException {
-
         guestArray = new ArrayList<>();
-
-        for (JSONArray ja : guestUrlList){
-            bmp = new ArrayList<>();
-            for (int j =0; j<ja.length(); j++){
-                HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
-                Bitmap bitmap = null;
-                try {
-                    bitmap = getImageRequest.execute(ja.getString(j)).get();
-                    bmp.add(bitmap);
+        for (final JSONArray ja : guestUrlList){
+            Handler mainHandler = new Handler(this.getApplicationContext().getMainLooper());
+            Runnable myRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    bmp = new ArrayList<>();
+                    for (int j =0; j<ja.length(); j++){
+                        HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
+                        Bitmap bitmap = null;
+                        try {
+                            bitmap = getImageRequest.execute(ja.getString(j)).get();
+                            bmp.add(bitmap);
+                        }
+                        catch (InterruptedException | ExecutionException | JSONException e){
+                            Log.e("MainActivity", "Thread is interrupted!", e);
+                        }
+                        if (bitmap == null){
+                            Log.e("MainActivity", "Failed fetching image from url");
+                        }
+                    }
                 }
-                catch (InterruptedException | ExecutionException e){
-                    Log.e("MainActivity", "Thread is interrupted!", e);
-                }
-                if (bitmap == null){
-                    Log.e("MainActivity", "Failed fetching image from url");
-                }
-            }
+            };
+            mainHandler.post(myRunnable);
         }
         guestArray.add(bmp);
 

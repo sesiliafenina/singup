@@ -23,13 +23,14 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.ExecutionException;
 
 public class QRCodeActivity extends AppCompatActivity {
     public final static int WHITE = 0xFF282828;
     public final static int BLACK = 0xFFFFFFFF;
     public final static int WIDTH = 700;
     public final static int HEIGHT = 700;
-    private Bitmap qrcode;
+    private Bitmap qrcode = null;
 
     @Override
     protected void onCreate(Bundle savedInstance) {
@@ -51,6 +52,21 @@ public class QRCodeActivity extends AppCompatActivity {
     }
 
     private void downloadQrCode(String url) {
+        HttpGetImageRequest getImageRequest = new HttpGetImageRequest();
+        try {
+            qrcode = getImageRequest.execute(url).get();
+        }
+        catch (InterruptedException | ExecutionException e){
+            Log.e("MainActivity", "Thread is interrupted!", e);
+        }
+        if (qrcode == null){
+            Log.e("MainActivity", "Failed fetching image from url");
+        }
+
+        ImageView imageView = (ImageView) findViewById(R.id.qrCodes);
+        imageView.setImageBitmap(qrcode);
+
+        /*
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(url, new FileAsyncHttpResponseHandler(this) {
             @Override
@@ -64,27 +80,13 @@ public class QRCodeActivity extends AppCompatActivity {
                 byte[] bytesArray = new byte[(int) response.length()];
                 Log.d("QR Code downloaded", "Attempt in downloading QR code successful");
                 Log.d("THIS IS FILE", response.toString());
-/*
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(response);
-                    fis.read(bytesArray); //read file into bytes[]
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // convert byteArray to bitmap and compress it
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytesArray, 0, bytesArray.length);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-                Log.d("THIS IS BITMAP", bitmap.toString());*/
+
                 String filePath = response.getPath();
                 Bitmap bitmap = BitmapFactory.decodeFile(filePath);
 
                 ImageView imageView = (ImageView) findViewById(R.id.qrCodes);
                 imageView.setImageBitmap(bitmap);
             }
-        });
+        });*/
     }
 }

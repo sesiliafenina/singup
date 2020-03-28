@@ -24,12 +24,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.loopj.android.http.*;
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final int PERMISSION_CODE = 1000;
@@ -95,10 +97,52 @@ public class RegisterActivity extends AppCompatActivity {
         EditText nameText = findViewById(R.id.name);
         String email = emailtext.getText().toString();
         String name = nameText.getText().toString();
-        RequestParams params = new RequestParams();
-        params.put("email", email);
-        params.put("name", name);
 
+        if (email.equals("")){
+            Toast.makeText(getApplicationContext(), "Email cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (name.equals("")){
+            Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        String result = null;
+        JSONObject response = new JSONObject(); // initialize with no default value
+
+        HttpPostStringRequest postRequest = new HttpPostStringRequest();
+        postRequest.addParams("email", email);
+        postRequest.addParams("name", name);
+
+
+        try {
+            result = postRequest.execute(url).get();
+        }
+        catch (InterruptedException | ExecutionException e){
+            Log.e("MyApplication", "Post Request is interrupted!", e);
+        }
+
+        assert result != null;
+        Log.d("Response", result);
+
+        try{
+            response = new JSONObject(result);
+        }catch (JSONException e){
+            Log.e("MyApplication", "Could not parse malformed JSON", e);
+        }
+        Toast.makeText(getApplicationContext(), "Http successful", Toast.LENGTH_LONG).show();
+
+        try {
+            String qrLink = response.getString("qr_link");
+            Log.d("QR LINK", qrLink);
+            qrlink = qrLink;
+            //downloadQrCode(qrLink);
+            Intent intent = new Intent(RegisterActivity.this, QRCodeActivity.class);
+            startActivity(intent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        /*
         AsyncHttpClient client = new AsyncHttpClient();
         client.setEnableRedirects(true);
         client.addHeader("Accept", "application/json");
@@ -145,7 +189,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 }
             }
-        });
+        });*/
     }
 
     private void openCamera() throws IOException {
