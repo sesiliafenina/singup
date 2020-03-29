@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,6 +47,9 @@ public class AddEventActivity extends AppCompatActivity {
     private String date;
     private List<Bitmap> listOfGGuest = new ArrayList<>();
     private Bitmap eventImage;
+    private static int i=1;
+    Button ButtonGuest1;
+    ImageView Image1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,7 @@ public class AddEventActivity extends AppCompatActivity {
         setContentView(R.layout.add_event);
         final TextView mTextView = findViewById(R.id.textCounter);
         final EditText mEditText = findViewById(R.id.eventDescription);
+
 
         Button button = findViewById(R.id.addImage);
         button.setOnClickListener(new View.OnClickListener() {
@@ -66,6 +71,7 @@ public class AddEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pickGuestImage(R.id.guestImage);
+                createNextGuestButton();
             }
         });
         /*
@@ -148,11 +154,14 @@ public class AddEventActivity extends AppCompatActivity {
                 ImageView imageView = findViewById(R.id.guestImage);
                 imageView.setImageBitmap(bitmap);
                 listOfGGuest.add(bitmap);
+
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        /*
+//Hakim error
         else if (requestCode == GUEST_IMAGE_REQUEST_CODE_2 && resultCode == RESULT_OK && data != null && data.getData() != null) {
 
             Uri uri = data.getData();
@@ -161,44 +170,95 @@ public class AddEventActivity extends AppCompatActivity {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                 // Log.d(TAG, String.valueOf(bitmap));
 
-                ImageView imageView = findViewById(R.id.guestImage2);
+                ImageView imageView = findViewById(R.id.Image1);
                 imageView.setImageBitmap(bitmap);
                 listOfGGuest.add(bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_3 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            Uri uri = data.getData();
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-
-                ImageView imageView = findViewById(R.id.guestImage3);
-                imageView.setImageBitmap(bitmap);
-                listOfGGuest.add(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        else{
+            Toast.makeText(this,"ERROR ",Toast.LENGTH_LONG).show();
         }
-        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_4 && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-            Uri uri = data.getData();
-
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
-                // Log.d(TAG, String.valueOf(bitmap));
-
-                ImageView imageView = findViewById(R.id.guestImage4);
-                imageView.setImageBitmap(bitmap);
-                listOfGGuest.add(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }*/
+//        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_3 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//
+//            Uri uri = data.getData();
+//
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                // Log.d(TAG, String.valueOf(bitmap));
+//
+//                ImageView imageView = findViewById(R.id.guestImage3);
+//                imageView.setImageBitmap(bitmap);
+//                listOfGGuest.add(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        else if (requestCode == GUEST_IMAGE_REQUEST_CODE_4 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//
+//            Uri uri = data.getData();
+//
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+//                // Log.d(TAG, String.valueOf(bitmap));
+//
+//                ImageView imageView = findViewById(R.id.guestImage4);
+//                imageView.setImageBitmap(bitmap);
+//                listOfGGuest.add(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
+
+    private void createNextGuestButton() {
+
+
+        try {
+
+            LinearLayout layout = (LinearLayout) findViewById(R.id.guestListAdd);
+            ButtonGuest1 = new Button(this);
+            ButtonGuest1.setClickable(true);
+            ButtonGuest1.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            ButtonGuest1.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT));
+//            ButtonGuest1.setId(Integer.parseInt("1234"));
+
+            layout.addView(ButtonGuest1);
+            Image1 = new ImageView(this);
+            Image1.setId(View.generateViewId());
+            layout.addView(Image1);
+            ButtonGuest1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    try {
+                        pickGuestImage(R.id.Image1);
+                        Toast error = Toast.makeText(getApplicationContext(),"clicketyclackaty",Toast.LENGTH_LONG);
+                        error.show();
+
+                    } catch (Exception e) {
+                        Toast error = Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG);
+                        error.show();
+                    }
+
+                }
+            });
+            Toast toast = Toast.makeText(getApplicationContext(),"createNextGuestButton: SUCCESS",Toast.LENGTH_LONG);
+            toast.show();
+
+
+
+        } catch (Exception e) {
+            Toast error = Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG);
+            error.show();
+        }
+
+
+    }
+
+
 
     private void pickEventImage(){
         //Create an Intent with action as ACTION_PICK
@@ -224,16 +284,16 @@ public class AddEventActivity extends AppCompatActivity {
         if (R.id.guestImage == id) {
             startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_1);
         }
-        /*
-        else if (R.id.guestImage2 == id) {
+
+        else if (R.id.Image1 == id) {
             startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_2);
         }
-        else if (R.id.guestImage3 == id) {
-            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_3);
-        }
-        else if (R.id.guestImage4 == id) {
-            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_4);
-        }*/
+//        else if (R.id.guestImage3 == id) {
+//            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_3);
+//        }
+//        else if (R.id.guestImage4 == id) {
+//            startActivityForResult(intent, GUEST_IMAGE_REQUEST_CODE_4);
+//        }
     }
 
     private void sendEventForm2(){

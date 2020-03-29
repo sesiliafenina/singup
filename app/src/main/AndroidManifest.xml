@@ -17,14 +17,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FR_CAMERA"></activity>
+        <activity android:name=".LoginPAge"></activity>
+        <activity android:name=".FR_CAMERA" />
         <activity android:name=".ManagerActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".DetailsActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".QRCodeActivity" />
         <activity android:name=".AddEventActivity" />
-        <activity android:name=".EventCreatedActivity"/>
+        <activity android:name=".EventCreatedActivity" />
         <activity android:name=".MainPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

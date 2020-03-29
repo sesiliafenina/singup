@@ -222,7 +222,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-/*
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -230,7 +230,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             sendPictureToServer();
         }
-    }*/
+    }
 
     private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
         AsyncHttpClient client = new AsyncHttpClient();
