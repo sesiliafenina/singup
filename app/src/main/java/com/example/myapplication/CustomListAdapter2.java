@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class CustomListAdapter extends android.widget.ArrayAdapter {
+public class CustomListAdapter2 extends android.widget.ArrayAdapter {
 
     // reference to the activity
     private final Activity context;
@@ -28,21 +28,25 @@ public class CustomListAdapter extends android.widget.ArrayAdapter {
 
     private final List<String> timeArray;
 
-    public CustomListAdapter(Activity context, List<String> nameArray, List<String> infoArray, List<Bitmap> imageIDarray, List<String> timeArray) {
-        super(context, R.layout.listview_row, nameArray);
+    private final List<String> idArray;
+
+    public CustomListAdapter2(Activity context, List<String> nameArray, List<String> infoArray, List<Bitmap> imageIDarray, List<String> timeArray, List<String> idArray) {
+        super(context, R.layout.listview_row_delete, nameArray);
 
         this.context = context;
         this.nameArray = nameArray;
         this.infoArray = infoArray;
         this.imageIDarray = imageIDarray;
         this.timeArray = timeArray;
+        this.idArray = idArray;
+
     }
 
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater=context.getLayoutInflater();
-        View rowView=inflater.inflate(R.layout.listview_row, null,true);
+        View rowView=inflater.inflate(R.layout.listview_row_delete, null,true);
 
-        //this code gets ref erences to objects in the listview_row.xml file
+        //this code gets references to objects in the listview_row.xml file
         TextView nameTextField = rowView.findViewById(R.id.nametextViewID);
         TextView timeTextField = rowView.findViewById(R.id.eventTime);
         ImageView imageIDField = rowView.findViewById(R.id.imageView1ID);

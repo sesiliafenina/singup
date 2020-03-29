@@ -49,7 +49,6 @@ import java.util.jar.JarOutputStream;
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
-
     private List<String> nameArray;
     private List<String> infoArray;
     private List<Bitmap> imageArray;
@@ -68,9 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         final SwipeRefreshLayout swipeRefreshLayout;
         getParams();
-        //Log.d("testing", "HELLO WORLD");
-        //Log.d("List of images", imageArray.toString());
-        // have to get lists of name and info of events here
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.Swipe);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

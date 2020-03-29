@@ -30,12 +30,28 @@ public class ManagerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        final Activity activity = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
-        Button qrcodeButton = findViewById(R.id.qrCodeButton);
-        Button button = findViewById(R.id.createEvent);
-        Button toFRpage = findViewById(R.id.facialrecognitionButton);
+        Button registerAttendeesButton = findViewById(R.id.registerAttendeesButton);
+        Button manageEventButton = findViewById(R.id.manageEventButton);
+
+        registerAttendeesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerActivity.this, ManagerRegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        manageEventButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerActivity.this, ManagerManageActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        /*
         toFRpage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +80,7 @@ public class ManagerActivity extends AppCompatActivity {
                 integrator.initiateScan();
 
             }
-        });
+        });*/
 
     }
     protected void onActivityResult(int requestCode,int resultCode, Intent data){

@@ -14,6 +14,7 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="Manage Attendance"
             android:textColor="#FFFFFFFF"
             android:textSize="50sp"
@@ -21,7 +22,7 @@
             android:layout_weight="1"
             android:layout_gravity="center"/>
     <Button
-            android:id="@+id/qrCodeButton"
+            android:id="@+id/registerAttendeesButton"
             android:layout_marginTop="40dp"
             android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
@@ -29,19 +30,10 @@
             android:layout_weight="2"
             android:textSize="30sp"
             android:background="@drawable/rounded_button"
-            android:text="QR Code"/>
+            android:text="Register
+Attendees"/>
     <Button
-            android:id="@+id/facialrecognitionButton"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:textSize="30sp"
-            android:background="@drawable/rounded_button_purple"
-            android:text="Facial Recognition"/>
-    <Button
-            android:id="@+id/createEvent"
+            android:id="@+id/manageEventButton"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="40dp"
             android:layout_width="match_parent"
@@ -49,6 +41,6 @@
             android:layout_weight="2"
             android:textSize="30sp"
             android:background="@drawable/rounded_button_blue"
-            android:text="Create Event"/>
+            android:text="Manage Event"/>
     </LinearLayout>
 </LinearLayout>

@@ -25,6 +25,9 @@
         <activity android:name=".QRCodeActivity" />
         <activity android:name=".AddEventActivity" />
         <activity android:name=".EventCreatedActivity"/>
+        <activity android:name=".ManagerManageActivity"/>
+        <activity android:name=".ManagerRegisterActivity"/>
+        <activity android:name=".DeleteEventActivity"/>
         <activity android:name=".MainPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

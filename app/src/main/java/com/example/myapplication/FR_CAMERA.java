@@ -113,6 +113,8 @@ public class FR_CAMERA extends AppCompatActivity {
 
         RequestParams parameters = new RequestParams();
 
+
+
         /*
         parameters.put("title", title);
         parameters.put("description", description);
