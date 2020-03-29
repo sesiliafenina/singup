@@ -201,7 +201,7 @@ public class RegisterActivity extends AppCompatActivity {
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
         startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE);
         picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
-        sendPictureToServer();
+//        sendPictureToServer();
     }
 
     @Override
@@ -222,29 +222,31 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-/*
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-
-            sendPictureToServer();
+//            mImageView.setImageURI(image_uri);
+            //Uri imageUri = data.getData();
+            Log.d("THIS IS IMAGE URI", image_uri.toString());
+            try {
+                picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
-    }*/
+        sendPictureToServer2();
+    }
 
-    private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
+    private void sendPictureToServer2(){
         AsyncHttpClient client = new AsyncHttpClient();
 
-        EditText emailtext = findViewById(R.id.email);
-        EditText nameText = findViewById(R.id.name);
-        String email = emailtext.getText().toString();
-        String name = nameText.getText().toString();
         RequestParams parameters = new RequestParams();
-        parameters.put("name", name);
-        parameters.put("email", email);
+
         parameters.put("selfie", new ByteArrayInputStream(bitmapToByteArray(picture)));
 
-        client.post("http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events/1/register/selfie", parameters, new AsyncHttpResponseHandler() {
+        client.post("http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/attendance/selfie", parameters, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -253,7 +255,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                CharSequence c = "Http successful";
+                CharSequence c = "Successfully Registered!";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
                 // called when response HTTP status is "200 OK"
             }
@@ -261,7 +263,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                CharSequence c = "Http failed";
+                CharSequence c = "Please Try again";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
                 //Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
             }
