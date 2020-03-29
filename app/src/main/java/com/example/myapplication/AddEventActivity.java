@@ -237,12 +237,7 @@ public class AddEventActivity extends AppCompatActivity {
     }
 
     private void sendEventForm2(){
-        //AsyncHttpClient client = new AsyncHttpClient();
-
-        String result = null;
-        JSONObject response = new JSONObject(); // initialize with no default value
-        String url = "http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/events";
-
+        AsyncHttpClient client = new AsyncHttpClient();
         getAllParams();
 
         HttpPostStringRequest postRequest = new HttpPostStringRequest();
@@ -252,32 +247,7 @@ public class AddEventActivity extends AppCompatActivity {
         postRequest.addParams("start", start);
         postRequest.addParams("end", end);
         postRequest.addParams("picture", new ByteArrayInputStream(bitmapToByteArray(eventImage)));
-        for (Bitmap butt : listOfGGuest){
-            postRequest.addParams("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
-        }
 
-        try {
-            result = postRequest.execute(url).get();
-        }
-        catch (InterruptedException | ExecutionException e){
-            Log.e("MyApplication", "Post Request is interrupted!", e);
-        }
-
-        assert result != null;
-        Log.d("Response", result);
-
-        /*
-        try{
-            response = new JSONObject(result);
-        }catch (JSONException e){
-            Log.e("MainActivity", "Could not parse malformed JSON", e);
-        }*/
-
-        Toast.makeText(getApplicationContext(), "Event Created!", Toast.LENGTH_LONG).show();
-
-        Intent intent = new Intent(AddEventActivity.this, EventCreatedActivity.class);
-        startActivity(intent);
-        /*
         RequestParams parameters = new RequestParams();
         parameters.put("title", title);
         parameters.put("description", description);
@@ -298,8 +268,7 @@ public class AddEventActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                CharSequence c = "Http successful";
-                Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Event Created!", Toast.LENGTH_LONG).show();
 
                 Intent intent = new Intent(AddEventActivity.this, EventCreatedActivity.class);
                 startActivity(intent);
@@ -317,7 +286,7 @@ public class AddEventActivity extends AppCompatActivity {
                 // called when request is retried
 
             }
-        });*/
+        });
     }
 
     private byte[] bitmapToByteArray(Bitmap bitmap){
