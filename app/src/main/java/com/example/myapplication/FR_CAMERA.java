@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +75,6 @@ public class FR_CAMERA extends AppCompatActivity {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
         startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE);
-        sendPictureToServer();
     }
 
     @Override
@@ -97,36 +97,25 @@ public class FR_CAMERA extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             mImageView.setImageURI(image_uri);
-            Uri imageUri = data.getData();
+            //Uri imageUri = data.getData();
+            Log.d("THIS IS IMAGE URI", image_uri.toString());
             try {
-                picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                picture = MediaStore.Images.Media.getBitmap(this.getContentResolver(), image_uri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            sendPictureToServer();
         }
+        sendPictureToServer();
     }
 
-   private void sendPictureToServer(){           //TODO COPY PASTED FROM NINA sendEventForm2() in AddEventActivity    //TODO Toast message if Person VALID or INVALID
+   private void sendPictureToServer(){
         AsyncHttpClient client = new AsyncHttpClient();
-        //getAllParams();
 
         RequestParams parameters = new RequestParams();
 
+        parameters.put("selfie", new ByteArrayInputStream(bitmapToByteArray(picture)));
 
-
-        /*
-        parameters.put("title", title);
-        parameters.put("description", description);
-        parameters.put("location", location);
-        for (Bitmap butt : listOfGGuest){
-            parameters.put("speaker_images[]", new ByteArrayInputStream(bitmapToByteArray(butt)));
-        }*/
-        parameters.put("picture", new ByteArrayInputStream(bitmapToByteArray(picture)));
-        //parameters.put("start", start);
-        //parameters.put("end", end);
-
-        client.post("http://infosys-mock.ap-southeast-1.elasticbeanstalk.com/api/events", parameters, new AsyncHttpResponseHandler() {
+        client.post("http://infosysmock-env.eba-wntiasbh.ap-southeast-1.elasticbeanstalk.com/api/attendance/selfie", parameters, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -135,7 +124,7 @@ public class FR_CAMERA extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                CharSequence c = "Http successful";
+                CharSequence c = "Successfully Registered!";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
                 // called when response HTTP status is "200 OK"
             }
@@ -143,7 +132,7 @@ public class FR_CAMERA extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                 // called when response HTTP status is "4XX" (eg. 401, 403, 404)
-                CharSequence c = "Http failed";
+                CharSequence c = "Face not recognized";
                 Toast.makeText(getApplicationContext(), c, Toast.LENGTH_LONG).show();
                 //Toast.makeText(getApplicationContext(), errorResponse.toString(), Toast.LENGTH_LONG).show();
             }
